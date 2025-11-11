@@ -694,7 +694,7 @@ CREATE TABLE `checkouts` (
   `order_bump_cta_text` VARCHAR(255) NOT NULL DEFAULT 'Quero comprar também!',
   `order_bump_cta_bg_color` VARCHAR(255) NOT NULL DEFAULT '#10b981',
   `order_bump_cta_text_color` VARCHAR(255) NOT NULL DEFAULT '#ffffff',
-  `order_bump_recommended_text` VARCHAR(255) NOT NULL DEFAULT '(Recomendado''),
+  `order_bump_recommended_text` VARCHAR(255) NOT NULL DEFAULT '(Recomendado)',
   `order_bump_recommended_color` VARCHAR(255) NOT NULL DEFAULT '#fbbf24',
   `order_bump_enabled` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
