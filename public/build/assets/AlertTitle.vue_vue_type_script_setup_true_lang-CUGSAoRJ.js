@@ -1,1 +1,0 @@
-import{c as n}from"./utils-CytzSlOG.js";import{z as o,c as t,o as r,i as c,u as l,I as m}from"./app-rxSkm_8n.js";const u=o({__name:"AlertTitle",props:{class:{}},setup(e){const s=e;return(a,i)=>(r(),t("h5",{class:c(l(n)("mb-1 font-medium leading-none tracking-tight",s.class))},[m(a.$slots,"default")],2))}});export{u as _};
