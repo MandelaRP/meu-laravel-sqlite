@@ -296,6 +296,12 @@ class ConvertSqliteToMysql extends Command
                     $column = preg_replace('/["\'](\w+)["\']/', '`$1`', $column);
                     // Normalizar FOREIGN KEY para maiúsculas
                     $column = preg_replace('/\bforeign\s+key\b/i', 'FOREIGN KEY', $column);
+                    // Corrigir sintaxe: references deve ser REFERENCES
+                    $column = preg_replace('/\breferences\b/i', 'REFERENCES', $column);
+                    // Garantir que a sintaxe está correta: FOREIGN KEY(`col`) REFERENCES `table`(`col`)
+                    $column = preg_replace_callback('/FOREIGN\s+KEY\s*\(`?(\w+)`?\)\s+references\s+`?(\w+)`?\s*\(`?(\w+)`?\)/i', function($m) {
+                        return "FOREIGN KEY (`{$m[1]}`) REFERENCES `{$m[2]}` (`{$m[3]}`)";
+                    }, $column);
                     $convertedColumns[] = $column;
                     continue;
                 }
@@ -427,6 +433,12 @@ class ConvertSqliteToMysql extends Command
                     $column = preg_replace('/["\'](\w+)["\']/', '`$1`', $column);
                     // Normalizar FOREIGN KEY para maiúsculas
                     $column = preg_replace('/\bforeign\s+key\b/i', 'FOREIGN KEY', $column);
+                    // Corrigir sintaxe: references deve ser REFERENCES
+                    $column = preg_replace('/\breferences\b/i', 'REFERENCES', $column);
+                    // Garantir que a sintaxe está correta: FOREIGN KEY(`col`) REFERENCES `table`(`col`)
+                    $column = preg_replace_callback('/FOREIGN\s+KEY\s*\(`?(\w+)`?\)\s+references\s+`?(\w+)`?\s*\(`?(\w+)`?\)/i', function($m) {
+                        return "FOREIGN KEY (`{$m[1]}`) REFERENCES `{$m[2]}` (`{$m[3]}`)";
+                    }, $column);
                     $convertedColumns[] = $column;
                 }
             }
