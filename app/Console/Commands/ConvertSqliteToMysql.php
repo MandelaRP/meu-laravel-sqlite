@@ -224,6 +224,16 @@ class ConvertSqliteToMysql extends Command
                 $column = trim($column);
                 if (empty($column)) continue;
                 
+                // Primeiro, tratar FOREIGN KEY antes de processar colunas
+                if (preg_match('/\bforeign\s+key\b/i', $column)) {
+                    // FOREIGN KEY - converter para sintaxe MySQL
+                    $column = preg_replace('/["\'](\w+)["\']/', '`$1`', $column);
+                    // Normalizar FOREIGN KEY para maiúsculas
+                    $column = preg_replace('/\bforeign\s+key\b/i', 'FOREIGN KEY', $column);
+                    $convertedColumns[] = $column;
+                    continue;
+                }
+                
                 // Primeiro, tratar PRIMARY KEY antes de processar colunas
                 if (preg_match('/\bprimary\s+key\s*\(/i', $column)) {
                     // PRIMARY KEY (em qualquer case) - normalizar
@@ -293,12 +303,14 @@ class ConvertSqliteToMysql extends Command
                     // Converter DEFAULT - tratar todos os casos
                     // Processar DEFAULT usando regex mais simples e direto
                     // Primeiro, tratar valores com parênteses e aspas aninhadas
-                    $colDef = preg_replace_callback('/DEFAULT\s+\(([^)]+)\)/i', function($m) {
+                    // Usar regex que captura parênteses aninhados corretamente
+                    $colDef = preg_replace_callback('/DEFAULT\s+\(([^)]*(?:\([^)]*\)[^)]*)*)\)/i', function($m) {
                         $value = trim($m[1]);
-                        // Remover aspas externas se houver
+                        // Remover todas as aspas (simples e duplas) do início e fim
                         $value = preg_replace('/^[\'"]+|[\'"]+$/', '', $value);
-                        // Remover aspas duplas no final se houver
-                        $value = rtrim($value, "'\"");
+                        // Remover qualquer aspas dupla restante (ex: '' no final)
+                        $value = preg_replace("/''$/", '', $value);
+                        $value = preg_replace("/^''/", '', $value);
                         if (is_numeric($value)) {
                             return 'DEFAULT ' . $value;
                         }
@@ -341,7 +353,7 @@ class ConvertSqliteToMysql extends Command
                     }
                     $convertedColumns[] = "PRIMARY KEY (" . implode(', ', $pkColsFormatted) . ")";
                 } elseif (preg_match('/FOREIGN KEY/i', $column)) {
-                    // FOREIGN KEY - converter para sintaxe MySQL
+                    // FOREIGN KEY - converter para sintaxe MySQL (caso não tenha sido capturado antes)
                     $column = preg_replace('/["\'](\w+)["\']/', '`$1`', $column);
                     // Normalizar FOREIGN KEY para maiúsculas
                     $column = preg_replace('/\bforeign\s+key\b/i', 'FOREIGN KEY', $column);

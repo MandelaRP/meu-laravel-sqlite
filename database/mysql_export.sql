@@ -1,5 +1,5 @@
 -- Exportação de SQLite para MySQL
--- Gerado em: 2025-11-11 16:18:46
+-- Gerado em: 2025-11-11 16:20:07
 -- 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -171,7 +171,7 @@ CREATE TABLE `groups` (
   `description` VARCHAR(255),
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id),
+  FOREIGN KEY(`user_id`) references `users`(`id`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -200,7 +200,7 @@ CREATE TABLE `members` (
   `alert_channels` TEXT NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id),
+  FOREIGN KEY(`user_id`) references `users`(`id`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -258,8 +258,8 @@ DROP TABLE IF EXISTS `permission_role`;
 CREATE TABLE `permission_role` (
   `permission_id` INT NOT NULL,
   `role_id` INT NOT NULL,
-  `foreign` key(permission_id) references permissions(id),
-  `foreign` key(role_id) references roles(id),
+  FOREIGN KEY(`permission_id`) references `permissions`(`id`),
+  FOREIGN KEY(`role_id`) references `roles`(`id`),
   PRIMARY KEY (`permission_id`, `role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -271,8 +271,8 @@ DROP TABLE IF EXISTS `role_user`;
 CREATE TABLE `role_user` (
   `role_id` INT NOT NULL,
   `user_id` INT NOT NULL,
-  `foreign` key(role_id) references roles(id),
-  `foreign` key(user_id) references users(id),
+  FOREIGN KEY(`role_id`) references `roles`(`id`),
+  FOREIGN KEY(`user_id`) references `users`(`id`),
   PRIMARY KEY (`role_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -291,8 +291,8 @@ DROP TABLE IF EXISTS `permission_user`;
 CREATE TABLE `permission_user` (
   `user_id` INT NOT NULL,
   `permission_id` INT NOT NULL,
-  `foreign` key(user_id) references users(id),
-  `foreign` key(permission_id) references permissions(id),
+  FOREIGN KEY(`user_id`) references `users`(`id`),
+  FOREIGN KEY(`permission_id`) references `permissions`(`id`),
   PRIMARY KEY (`user_id`, `permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -315,8 +315,8 @@ DROP TABLE IF EXISTS `member_role`;
 CREATE TABLE `member_role` (
   `member_id` INT NOT NULL,
   `role_id` INT NOT NULL,
-  `foreign` key(member_id) references members(id),
-  `foreign` key(role_id) references roles(id),
+  FOREIGN KEY(`member_id`) references `members`(`id`),
+  FOREIGN KEY(`role_id`) references `roles`(`id`),
   PRIMARY KEY (`member_id`, `role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -335,7 +335,7 @@ CREATE TABLE `addresses` (
   `state` VARCHAR(255) NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id),
+  FOREIGN KEY(`user_id`) references `users`(`id`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -364,7 +364,7 @@ CREATE TABLE `financial_settings` (
   `maximum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT '25',
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete cascade,
+  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -381,7 +381,7 @@ CREATE TABLE `categories` (
   `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete cascade,
+  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -407,8 +407,8 @@ CREATE TABLE `order_bumps` (
   `product_id` VARCHAR(255) NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(checkout_id) references checkouts(id) on delete cascade on update cascade,
-  `foreign` key(product_id) references products(id) on delete cascade on update cascade,
+  FOREIGN KEY(`checkout_id`) references `checkouts`(`id`) on delete cascade on update cascade,
+  FOREIGN KEY(`product_id`) references `products`(`id`) on delete cascade on update cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -465,7 +465,7 @@ CREATE TABLE `liberpay_sales` (
   `liberpay_response` TEXT,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete cascade,
+  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -514,7 +514,7 @@ CREATE TABLE `users` (
   `cash_out_percentage` DECIMAL(10,2),
   `cash_out_fixed` DECIMAL(10,2),
   `preferred_acquirer` VARCHAR(255),
-  `foreign` key(acquirer_id) references acquirers(id) on delete set NULL,
+  FOREIGN KEY(`acquirer_id`) references `acquirers`(`id`) on delete set null,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -578,7 +578,7 @@ CREATE TABLE `fullpix_sales` (
   `fullpix_response` TEXT,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete cascade,
+  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -620,7 +620,7 @@ CREATE TABLE `pix_keys` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete cascade,
+  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -654,7 +654,7 @@ CREATE TABLE `withdrawals` (
   `created_at` datetime,
   `updated_at` datetime,
   `gateway_fee` DECIMAL(10,2) NOT NULL DEFAULT '0',
-  `foreign` key(user_id) references users(id) on delete cascade,
+  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -731,7 +731,7 @@ CREATE TABLE `checkouts` (
   `order_bump_enabled` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete no action on update no action,
+  FOREIGN KEY(`user_id`) references users(`id`) on delete no action on update no action,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -762,7 +762,7 @@ CREATE TABLE `transactions` (
   `updated_at` datetime,
   `is_sample` tinyint(1) NOT NULL DEFAULT '0',
   `product_id` VARCHAR(255),
-  `foreign` key(user_id) references users(id) on delete cascade on update no action,
+  FOREIGN KEY(`user_id`) references users(`id`) on delete cascade on update no action,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -798,8 +798,8 @@ CREATE TABLE `products` (
   `is_sample` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id),
-  `foreign` key(category_id) references categories(id),
+  FOREIGN KEY(`user_id`) references `users`(`id`),
+  FOREIGN KEY(`category_id`) references `categories`(`id`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
