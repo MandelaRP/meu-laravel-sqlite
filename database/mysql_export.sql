@@ -529,8 +529,8 @@ CREATE TABLE `order_bumps` (
   `product_id` VARCHAR(255) NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) ON DELETE CASCADE on update cascade,
-  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE on update cascade,
+  FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -794,7 +794,7 @@ CREATE TABLE `transactions` (
   `updated_at` datetime,
   `is_sample` tinyint(1) NOT NULL DEFAULT '0',
   `product_id` VARCHAR(255),
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE on update no action,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
