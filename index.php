@@ -35,6 +35,23 @@ if (file_exists($maintenance = $laravelPath . '/storage/framework/maintenance.ph
 // Register the Composer autoloader...
 require $laravelPath . '/vendor/autoload.php';
 
+// Servir arquivos estáticos diretamente (assets, imagens, etc)
+$requestUri = $_SERVER['REQUEST_URI'] ?? '';
+$requestFile = $laravelPath . '/public' . parse_url($requestUri, PHP_URL_PATH);
+
+// Se for um arquivo estático que existe, servir diretamente
+if ($requestUri && file_exists($requestFile) && is_file($requestFile)) {
+    // Verificar se é um arquivo de asset ou imagem
+    if (preg_match('#^/(build|images|vendor|favicon\.ico|robots\.txt)#', $requestUri)) {
+        $mimeType = mime_content_type($requestFile);
+        if ($mimeType) {
+            header('Content-Type: ' . $mimeType);
+        }
+        readfile($requestFile);
+        exit;
+    }
+}
+
 // Bootstrap Laravel and handle the request...
 /** @var Application $app */
 $app = require_once $laravelPath . '/bootstrap/app.php';
