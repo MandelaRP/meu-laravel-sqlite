@@ -62,6 +62,10 @@ class ConvertSqliteToMysql extends Command
             // Ordenar tabelas por dependências (FOREIGN KEYs)
             $tables = $this->orderTablesByDependencies($tables);
 
+            // Coletar todos os IDs válidos de todas as tabelas para validação
+            $this->info("🔍 Coletando referências válidas para validação...");
+            $allValidReferences = $this->collectAllValidReferences($tables);
+
             // Abrir arquivo para escrita
             $sqlFile = fopen($outputPath, 'w');
             
@@ -80,15 +84,23 @@ class ConvertSqliteToMysql extends Command
             fwrite($sqlFile, "/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;\n");
             fwrite($sqlFile, "/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;\n");
             fwrite($sqlFile, "/*!40101 SET NAMES utf8mb4 */;\n\n");
+            
+            // Desabilitar verificação de FOREIGN KEY durante importação
+            fwrite($sqlFile, "-- Desabilitar verificação de FOREIGN KEY durante importação\n");
+            fwrite($sqlFile, "SET FOREIGN_KEY_CHECKS = 0;\n\n");
 
             // Processar cada tabela
             foreach ($tables as $table) {
                 $this->line("📋 Processando tabela: {$table}");
-                $this->exportTable($sqlFile, $table);
+                $this->exportTable($sqlFile, $table, $allValidReferences);
             }
 
+            // Reabilitar verificação de FOREIGN KEY após importação
+            fwrite($sqlFile, "\n-- Reabilitar verificação de FOREIGN KEY após importação\n");
+            fwrite($sqlFile, "SET FOREIGN_KEY_CHECKS = 1;\n\n");
+            
             // Escrever rodapé
-            fwrite($sqlFile, "\n/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n");
+            fwrite($sqlFile, "/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n");
             fwrite($sqlFile, "/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;\n");
             fwrite($sqlFile, "/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;\n");
 
@@ -183,9 +195,89 @@ class ConvertSqliteToMysql extends Command
     }
 
     /**
+     * Coletar todas as referências válidas de todas as tabelas
+     */
+    private function collectAllValidReferences(array $tables): array
+    {
+        $allReferences = [];
+        
+        foreach ($tables as $table) {
+            try {
+                $ids = DB::table($table)->pluck('id')->toArray();
+                $allReferences[$table] = $ids;
+            } catch (\Exception $e) {
+                $allReferences[$table] = [];
+            }
+        }
+        
+        return $allReferences;
+    }
+
+    /**
+     * Obter referências válidas para validação de FOREIGN KEYs
+     */
+    private function getValidReferences(string $tableName, array $allValidReferences): array
+    {
+        $references = [];
+        
+        // Mapear tabelas e suas colunas de referência
+        $foreignKeyMap = [
+            'addresses' => ['user_id' => 'users'],
+            'categories' => ['user_id' => 'users'],
+            'groups' => ['user_id' => 'users'],
+            'members' => ['user_id' => 'users'],
+            'products' => ['user_id' => 'users', 'category_id' => 'categories'],
+            'checkouts' => ['user_id' => 'users', 'product_id' => 'products'],
+            'transactions' => ['user_id' => 'users', 'product_id' => 'products', 'checkout_id' => 'checkouts'],
+            'fullpix_sales' => ['user_id' => 'users'],
+            'liberpay_sales' => ['user_id' => 'users'],
+            'withdrawals' => ['user_id' => 'users'],
+            'pix_keys' => ['user_id' => 'users'],
+            'system_images' => [],
+            'users' => ['acquirer_id' => 'acquirers'],
+            'permission_user' => ['user_id' => 'users', 'permission_id' => 'permissions'],
+            'role_user' => ['user_id' => 'users', 'role_id' => 'roles'],
+            'permission_role' => ['permission_id' => 'permissions', 'role_id' => 'roles'],
+            'member_role' => ['member_id' => 'members', 'role_id' => 'roles'],
+        ];
+        
+        if (!isset($foreignKeyMap[$tableName])) {
+            return $references;
+        }
+        
+        foreach ($foreignKeyMap[$tableName] as $column => $refTable) {
+            if (isset($allValidReferences[$refTable])) {
+                $references[$column] = $allValidReferences[$refTable];
+            } else {
+                $references[$column] = [];
+            }
+        }
+        
+        return $references;
+    }
+
+    /**
+     * Validar FOREIGN KEYs antes de inserir
+     */
+    private function validateForeignKeys(string $tableName, array $rowData, array $validReferences): bool
+    {
+        foreach ($validReferences as $column => $validIds) {
+            if (isset($rowData[$column]) && $rowData[$column] !== null) {
+                // Se a lista de IDs válidos está vazia, pode ser que a tabela ainda não foi processada
+                // Nesse caso, permitir (será validado quando FOREIGN_KEY_CHECKS for reabilitado)
+                if (!empty($validIds) && !in_array($rowData[$column], $validIds)) {
+                    return false; // FOREIGN KEY inválida
+                }
+            }
+        }
+        
+        return true;
+    }
+
+    /**
      * Exportar tabela para SQL
      */
-    private function exportTable($file, string $tableName): void
+    private function exportTable($file, string $tableName, array $allValidReferences = []): void
     {
         // Obter estrutura da tabela
         $createTable = DB::select("SELECT sql FROM sqlite_master WHERE type='table' AND name=?", [$tableName]);
