@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════╗
+║     🔧 SOLUÇÃO RÁPIDA: Erro de Storage                      ║
+╚══════════════════════════════════════════════════════════════╝
+
+❌ ERRO:
+file_put_contents(...storage/framework/sessions/...): 
+Failed to open stream: No such file or directory
+
+✅ SOLUÇÃO RÁPIDA:
+
+OPÇÃO 1 - Script Automático (MAIS FÁCIL):
+
+1. Faça upload do arquivo: CRIAR_PASTAS_STORAGE.php
+2. Acesse no navegador: https://auraspay.online/CRIAR_PASTAS_STORAGE.php
+3. Aguarde a mensagem de sucesso
+4. DELETE o arquivo CRIAR_PASTAS_STORAGE.php por segurança
+5. Teste novamente: https://auraspay.online
+
+═══════════════════════════════════════════════════════════════
+
+OPÇÃO 2 - Criar Manualmente (via File Manager):
+
+Crie estas pastas no servidor:
+
+storage/
+├── app/
+│   └── public/
+├── framework/
+│   ├── cache/
+│   │   └── data/
+│   ├── sessions/
+│   ├── testing/
+│   └── views/
+└── logs/
+
+bootstrap/
+└── cache/
+
+═══════════════════════════════════════════════════════════════
+
+✅ APÓS CRIAR AS PASTAS:
+
+1. Teste novamente: https://auraspay.online
+2. O código foi atualizado para criar automaticamente na próxima versão
+
+═══════════════════════════════════════════════════════════════
+
