@@ -1,5 +1,5 @@
 -- Exportação de SQLite para MySQL
--- Gerado em: 2025-11-11 16:25:16
+-- Gerado em: 2025-11-11 16:27:53
 -- 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -9,6 +9,81 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+
+
+-- Estrutura da tabela `cache`
+DROP TABLE IF EXISTS `cache`;
+CREATE TABLE `cache` (
+  `key` VARCHAR(255) NOT NULL,
+  `value` TEXT NOT NULL,
+  `expiration` INT NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `cache`: vazia
+
+
+-- Estrutura da tabela `cache_locks`
+DROP TABLE IF EXISTS `cache_locks`;
+CREATE TABLE `cache_locks` (
+  `key` VARCHAR(255) NOT NULL,
+  `owner` VARCHAR(255) NOT NULL,
+  `expiration` INT NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `cache_locks`: vazia
+
+
+-- Estrutura da tabela `failed_jobs`
+DROP TABLE IF EXISTS `failed_jobs`;
+CREATE TABLE `failed_jobs` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `uuid` VARCHAR(255) NOT NULL,
+  `connection` TEXT NOT NULL,
+  `queue` TEXT NOT NULL,
+  `payload` TEXT NOT NULL,
+  `exception` TEXT NOT NULL,
+  `failed_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `failed_jobs`: vazia
+
+
+-- Estrutura da tabela `job_batches`
+DROP TABLE IF EXISTS `job_batches`;
+CREATE TABLE `job_batches` (
+  `id` VARCHAR(255) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `total_jobs` INT NOT NULL,
+  `pending_jobs` INT NOT NULL,
+  `failed_jobs` INT NOT NULL,
+  `failed_job_ids` TEXT NOT NULL,
+  `options` TEXT,
+  `cancelled_at` INT,
+  `created_at` INT NOT NULL,
+  `finished_at` INT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `job_batches`: vazia
+
+
+-- Estrutura da tabela `jobs`
+DROP TABLE IF EXISTS `jobs`;
+CREATE TABLE `jobs` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `queue` VARCHAR(255) NOT NULL,
+  `payload` TEXT NOT NULL,
+  `attempts` INT NOT NULL,
+  `reserved_at` INT,
+  `available_at` INT NOT NULL,
+  `created_at` INT NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `jobs`: vazia
 
 
 -- Estrutura da tabela `migrations`
@@ -87,334 +162,6 @@ CREATE TABLE `sessions` (
 -- Dados da tabela `sessions`: vazia
 
 
--- Estrutura da tabela `cache`
-DROP TABLE IF EXISTS `cache`;
-CREATE TABLE `cache` (
-  `key` VARCHAR(255) NOT NULL,
-  `value` TEXT NOT NULL,
-  `expiration` INT NOT NULL,
-  PRIMARY KEY (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `cache`: vazia
-
-
--- Estrutura da tabela `cache_locks`
-DROP TABLE IF EXISTS `cache_locks`;
-CREATE TABLE `cache_locks` (
-  `key` VARCHAR(255) NOT NULL,
-  `owner` VARCHAR(255) NOT NULL,
-  `expiration` INT NOT NULL,
-  PRIMARY KEY (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `cache_locks`: vazia
-
-
--- Estrutura da tabela `jobs`
-DROP TABLE IF EXISTS `jobs`;
-CREATE TABLE `jobs` (
-  `id` INT AUTO_INCREMENT NOT NULL,
-  `queue` VARCHAR(255) NOT NULL,
-  `payload` TEXT NOT NULL,
-  `attempts` INT NOT NULL,
-  `reserved_at` INT,
-  `available_at` INT NOT NULL,
-  `created_at` INT NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `jobs`: vazia
-
-
--- Estrutura da tabela `job_batches`
-DROP TABLE IF EXISTS `job_batches`;
-CREATE TABLE `job_batches` (
-  `id` VARCHAR(255) NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `total_jobs` INT NOT NULL,
-  `pending_jobs` INT NOT NULL,
-  `failed_jobs` INT NOT NULL,
-  `failed_job_ids` TEXT NOT NULL,
-  `options` TEXT,
-  `cancelled_at` INT,
-  `created_at` INT NOT NULL,
-  `finished_at` INT,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `job_batches`: vazia
-
-
--- Estrutura da tabela `failed_jobs`
-DROP TABLE IF EXISTS `failed_jobs`;
-CREATE TABLE `failed_jobs` (
-  `id` INT AUTO_INCREMENT NOT NULL,
-  `uuid` VARCHAR(255) NOT NULL,
-  `connection` TEXT NOT NULL,
-  `queue` TEXT NOT NULL,
-  `payload` TEXT NOT NULL,
-  `exception` TEXT NOT NULL,
-  `failed_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `failed_jobs`: vazia
-
-
--- Estrutura da tabela `groups`
-DROP TABLE IF EXISTS `groups`;
-CREATE TABLE `groups` (
-  `id` VARCHAR(255) NOT NULL,
-  `user_id` INT NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `description` VARCHAR(255),
-  `created_at` datetime,
-  `updated_at` datetime,
-  FOREIGN KEY(`user_id`) references `users`(`id`),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `groups`
-LOCK TABLES `groups` WRITE;
-/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
-INSERT INTO `groups` (`id`, `user_id`, `name`, `description`, `created_at`, `updated_at`) VALUES
-('019a6978-41cf-726f-a753-cedffa7fa8dc', 2, 'ipsam', 'Grupo de teste', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-41db-720c-9c54-2b38a1677974', 3, 'qui', 'Grupo de teste', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-41eb-72b1-b648-96e839b1e79a', 4, 'cumque', 'Grupo de teste', '2025-11-09 16:34:40', '2025-11-09 16:34:40');
-/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
--- Estrutura da tabela `members`
-DROP TABLE IF EXISTS `members`;
-CREATE TABLE `members` (
-  `id` INT AUTO_INCREMENT NOT NULL,
-  `user_id` INT NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
-  `phone` VARCHAR(255) NOT NULL,
-  `alert_type` VARCHAR(255) CHECK (`alert_type` IN ('error', 'warning', 'info', 'debug', 'critical', 'success', 'unknown', 'fatal', 'notice', 'alert', 'emergency')),
-  `notifications` tinyint(1) NOT NULL DEFAULT '1',
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `alert_channels` TEXT NOT NULL,
-  `created_at` datetime,
-  `updated_at` datetime,
-  FOREIGN KEY(`user_id`) references `users`(`id`),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `members`: vazia
-
-
--- Estrutura da tabela `roles`
-DROP TABLE IF EXISTS `roles`;
-CREATE TABLE `roles` (
-  `id` INT AUTO_INCREMENT NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `created_at` datetime,
-  `updated_at` datetime,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `roles`
-LOCK TABLES `roles` WRITE;
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-(2, 'support', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-(3, 'developer', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-(4, 'owner', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-(5, 'infrastructure', '2025-11-09 16:34:40', '2025-11-09 16:34:40');
-/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
--- Estrutura da tabela `permissions`
-DROP TABLE IF EXISTS `permissions`;
-CREATE TABLE `permissions` (
-  `id` INT AUTO_INCREMENT NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `created_at` datetime,
-  `updated_at` datetime,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `permissions`
-LOCK TABLES `permissions` WRITE;
-/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
-INSERT INTO `permissions` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'view-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-(2, 'edit-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-(3, 'delete-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-(4, 'create-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-(5, 'update-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40');
-/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
--- Estrutura da tabela `permission_role`
-DROP TABLE IF EXISTS `permission_role`;
-CREATE TABLE `permission_role` (
-  `permission_id` INT NOT NULL,
-  `role_id` INT NOT NULL,
-  FOREIGN KEY(`permission_id`) references `permissions`(`id`),
-  FOREIGN KEY(`role_id`) references `roles`(`id`),
-  PRIMARY KEY (`permission_id`, `role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `permission_role`: vazia
-
-
--- Estrutura da tabela `role_user`
-DROP TABLE IF EXISTS `role_user`;
-CREATE TABLE `role_user` (
-  `role_id` INT NOT NULL,
-  `user_id` INT NOT NULL,
-  FOREIGN KEY(`role_id`) references `roles`(`id`),
-  FOREIGN KEY(`user_id`) references `users`(`id`),
-  PRIMARY KEY (`role_id`, `user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `role_user`
-LOCK TABLES `role_user` WRITE;
-/*!40000 ALTER TABLE `role_user` DISABLE KEYS */;
-INSERT INTO `role_user` (`role_id`, `user_id`) VALUES
-(1, 1),
-(1, 6);
-/*!40000 ALTER TABLE `role_user` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
--- Estrutura da tabela `permission_user`
-DROP TABLE IF EXISTS `permission_user`;
-CREATE TABLE `permission_user` (
-  `user_id` INT NOT NULL,
-  `permission_id` INT NOT NULL,
-  FOREIGN KEY(`user_id`) references `users`(`id`),
-  FOREIGN KEY(`permission_id`) references `permissions`(`id`),
-  PRIMARY KEY (`user_id`, `permission_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `permission_user`
-LOCK TABLES `permission_user` WRITE;
-/*!40000 ALTER TABLE `permission_user` DISABLE KEYS */;
-INSERT INTO `permission_user` (`user_id`, `permission_id`) VALUES
-(1, 1),
-(6, 1),
-(6, 2),
-(6, 3),
-(6, 4),
-(6, 5);
-/*!40000 ALTER TABLE `permission_user` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
--- Estrutura da tabela `member_role`
-DROP TABLE IF EXISTS `member_role`;
-CREATE TABLE `member_role` (
-  `member_id` INT NOT NULL,
-  `role_id` INT NOT NULL,
-  FOREIGN KEY(`member_id`) references `members`(`id`),
-  FOREIGN KEY(`role_id`) references `roles`(`id`),
-  PRIMARY KEY (`member_id`, `role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `member_role`: vazia
-
-
--- Estrutura da tabela `addresses`
-DROP TABLE IF EXISTS `addresses`;
-CREATE TABLE `addresses` (
-  `id` INT AUTO_INCREMENT NOT NULL,
-  `user_id` INT NOT NULL,
-  `zip_code` VARCHAR(255) NOT NULL,
-  `address` VARCHAR(255) NOT NULL,
-  `number` VARCHAR(255) NOT NULL,
-  `city` VARCHAR(255) NOT NULL,
-  `state` VARCHAR(255) NOT NULL,
-  `created_at` datetime,
-  `updated_at` datetime,
-  FOREIGN KEY(`user_id`) references `users`(`id`),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `addresses`
-LOCK TABLES `addresses` WRITE;
-/*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
-INSERT INTO `addresses` (`id`, `user_id`, `zip_code`, `address`, `number`, `city`, `state`, `created_at`, `updated_at`) VALUES
-(1, 7, '57602-335', 'Travessa Vereador Zeca Paulo', '300', 'Maceió', 'AL', '2025-11-09 17:00:53', '2025-11-09 17:00:53'),
-(2, 8, '57602-335', 'Travessa Vereador Zeca Paulo', '300', 'Maceió', 'AL', '2025-11-09 17:40:37', '2025-11-09 17:40:37');
-/*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
--- Estrutura da tabela `financial_settings`
-DROP TABLE IF EXISTS `financial_settings`;
-CREATE TABLE `financial_settings` (
-  `id` INT AUTO_INCREMENT NOT NULL,
-  `user_id` INT NOT NULL,
-  `cash_in_percentage` DECIMAL(10,2) NOT NULL DEFAULT '5',
-  `cash_in_fixed_value` DECIMAL(10,2) NOT NULL default '2.5',
-  `cash_out_percentage` DECIMAL(10,2) NOT NULL default '3.5',
-  `cash_out_fixed_value` DECIMAL(10,2) NOT NULL default '1.8',
-  `minimum_cash_in_value` DECIMAL(10,2) NOT NULL DEFAULT '10',
-  `maximum_cash_in_value` DECIMAL(10,2) NOT NULL DEFAULT '50',
-  `minimum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT '5',
-  `maximum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT '25',
-  `created_at` datetime,
-  `updated_at` datetime,
-  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `financial_settings`: vazia
-
-
--- Estrutura da tabela `categories`
-DROP TABLE IF EXISTS `categories`;
-CREATE TABLE `categories` (
-  `id` VARCHAR(255) NOT NULL,
-  `user_id` INT NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `description` VARCHAR(255),
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` datetime,
-  `updated_at` datetime,
-  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `categories`
-LOCK TABLES `categories` WRITE;
-/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` (`id`, `user_id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
-('019a6978-4261-7297-b408-37f99858b313', 1, 'Eletrônicos', 'Produtos eletrônicos e tecnológicos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-426c-7321-90df-9f945330722a', 1, 'Ebooks', 'Ebooks e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-4283-7288-bd5e-7b71f062085d', 1, 'Vestuário', 'Roupas e acessórios', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-428f-72a9-9bfb-261f62e8ea89', 1, 'Casa e Jardim', 'Produtos para casa e jardinagem', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-4299-7342-a3cc-44ee13a3bc27', 1, 'Esportes', 'Equipamentos e acessórios esportivos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-42a3-727a-b25e-0fb4698c3f11', 1, 'Livros', 'Livros e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40');
-/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
--- Estrutura da tabela `order_bumps`
-DROP TABLE IF EXISTS `order_bumps`;
-CREATE TABLE `order_bumps` (
-  `id` INT AUTO_INCREMENT NOT NULL,
-  `checkout_id` VARCHAR(255) NOT NULL,
-  `product_id` VARCHAR(255) NOT NULL,
-  `created_at` datetime,
-  `updated_at` datetime,
-  FOREIGN KEY(`checkout_id`) references `checkouts`(`id`) on delete cascade on update cascade,
-  FOREIGN KEY(`product_id`) references `products`(`id`) on delete cascade on update cascade,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `order_bumps`: vazia
-
-
 -- Estrutura da tabela `acquirers`
 DROP TABLE IF EXISTS `acquirers`;
 CREATE TABLE `acquirers` (
@@ -446,30 +193,108 @@ INSERT INTO `acquirers` (`id`, `name`, `slug`, `description`, `is_active`, `api_
 UNLOCK TABLES;
 
 
--- Estrutura da tabela `liberpay_sales`
-DROP TABLE IF EXISTS `liberpay_sales`;
-CREATE TABLE `liberpay_sales` (
-  `id` INT AUTO_INCREMENT NOT NULL,
+-- Estrutura da tabela `categories`
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE `categories` (
+  `id` VARCHAR(255) NOT NULL,
   `user_id` INT NOT NULL,
-  `liberpay_sale_id` VARCHAR(255) NOT NULL,
-  `reference_code` VARCHAR(255),
-  `external_reference` VARCHAR(255),
-  `amount` DECIMAL(10,2) NOT NULL,
-  `currency` VARCHAR(255) NOT NULL DEFAULT 'BRL',
-  `status` VARCHAR(255) CHECK (`status` IN ('pending', 'paid', 'expired', 'cancelled', 'refunded')) NOT NULL DEFAULT 'pending',
-  `pix_qr_code` TEXT,
-  `pix_qr_code_image` TEXT,
-  `expires_at` datetime,
-  `paid_at` datetime,
-  `metadata` TEXT,
-  `liberpay_response` TEXT,
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
   FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dados da tabela `liberpay_sales`: vazia
+-- Dados da tabela `categories`
+LOCK TABLES `categories` WRITE;
+/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` (`id`, `user_id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
+('019a6978-4261-7297-b408-37f99858b313', 1, 'Eletrônicos', 'Produtos eletrônicos e tecnológicos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-426c-7321-90df-9f945330722a', 1, 'Ebooks', 'Ebooks e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-4283-7288-bd5e-7b71f062085d', 1, 'Vestuário', 'Roupas e acessórios', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-428f-72a9-9bfb-261f62e8ea89', 1, 'Casa e Jardim', 'Produtos para casa e jardinagem', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-4299-7342-a3cc-44ee13a3bc27', 1, 'Esportes', 'Equipamentos e acessórios esportivos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-42a3-727a-b25e-0fb4698c3f11', 1, 'Livros', 'Livros e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40');
+/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Estrutura da tabela `permissions`
+DROP TABLE IF EXISTS `permissions`;
+CREATE TABLE `permissions` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `permissions`
+LOCK TABLES `permissions` WRITE;
+/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
+INSERT INTO `permissions` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'view-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+(2, 'edit-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+(3, 'delete-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+(4, 'create-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+(5, 'update-user', '2025-11-09 16:34:40', '2025-11-09 16:34:40');
+/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Estrutura da tabela `roles`
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `roles`
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'admin', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+(2, 'support', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+(3, 'developer', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+(4, 'owner', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+(5, 'infrastructure', '2025-11-09 16:34:40', '2025-11-09 16:34:40');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Estrutura da tabela `system_settings`
+DROP TABLE IF EXISTS `system_settings`;
+CREATE TABLE `system_settings` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `key` VARCHAR(255) NOT NULL,
+  `value` TEXT,
+  `type` VARCHAR(255) NOT NULL DEFAULT 'string',
+  `description` TEXT,
+  `created_at` datetime,
+  `updated_at` datetime,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `system_settings`
+LOCK TABLES `system_settings` WRITE;
+/*!40000 ALTER TABLE `system_settings` DISABLE KEYS */;
+INSERT INTO `system_settings` (`id`, `key`, `value`, `type`, `description`, `created_at`, `updated_at`) VALUES
+(1, 'gateway_pix_percentage', '2.99', 'decimal', 'Taxa percentual PIX (%)', '2025-11-09 16:34:39', '2025-11-10 02:23:23'),
+(2, 'gateway_pix_fixed', '1.99', 'decimal', 'Taxa fixa PIX (R$)', '2025-11-09 16:34:39', '2025-11-10 02:23:23'),
+(3, 'payment_method_pix', '1', 'boolean', 'Método de pagamento PIX ativo', '2025-11-09 16:34:39', '2025-11-09 21:02:54'),
+(4, 'payment_method_credit_card', '1', 'boolean', 'Método de pagamento Cartão de Crédito ativo', '2025-11-09 16:34:39', '2025-11-09 21:02:54'),
+(5, 'payment_method_boleto', '1', 'boolean', 'Método de pagamento Boleto ativo', '2025-11-09 16:34:39', '2025-11-09 21:02:54'),
+(6, 'min_withdraw', '10', 'decimal', 'Valor mÃ­nimo para saque', '2025-11-09 22:45:40', '2025-11-10 04:53:59'),
+(7, 'fixed_withdraw_fee', '5', 'decimal', 'Taxa fixa de saque (R$)', '2025-11-09 22:45:40', '2025-11-10 02:30:17'),
+(8, 'percent_withdraw_fee', '0', 'decimal', 'Taxa percentual de saque (%)', '2025-11-09 22:45:40', '2025-11-09 22:45:40'),
+(9, 'transfer_mode', 'automatico', 'string', 'Modo de transferência (manual/automatico)', '2025-11-09 22:45:40', '2025-11-09 23:35:50');
+/*!40000 ALTER TABLE `system_settings` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 -- Estrutura da tabela `users`
@@ -529,34 +354,52 @@ INSERT INTO `users` (`id`, `name`, `email`, `avatar`, `email_verified_at`, `pass
 UNLOCK TABLES;
 
 
--- Estrutura da tabela `system_settings`
-DROP TABLE IF EXISTS `system_settings`;
-CREATE TABLE `system_settings` (
+-- Estrutura da tabela `addresses`
+DROP TABLE IF EXISTS `addresses`;
+CREATE TABLE `addresses` (
   `id` INT AUTO_INCREMENT NOT NULL,
-  `key` VARCHAR(255) NOT NULL,
-  `value` TEXT,
-  `type` VARCHAR(255) NOT NULL DEFAULT 'string',
-  `description` TEXT,
+  `user_id` INT NOT NULL,
+  `zip_code` VARCHAR(255) NOT NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `number` VARCHAR(255) NOT NULL,
+  `city` VARCHAR(255) NOT NULL,
+  `state` VARCHAR(255) NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
+  FOREIGN KEY(`user_id`) references `users`(`id`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dados da tabela `system_settings`
-LOCK TABLES `system_settings` WRITE;
-/*!40000 ALTER TABLE `system_settings` DISABLE KEYS */;
-INSERT INTO `system_settings` (`id`, `key`, `value`, `type`, `description`, `created_at`, `updated_at`) VALUES
-(1, 'gateway_pix_percentage', '2.99', 'decimal', 'Taxa percentual PIX (%)', '2025-11-09 16:34:39', '2025-11-10 02:23:23'),
-(2, 'gateway_pix_fixed', '1.99', 'decimal', 'Taxa fixa PIX (R$)', '2025-11-09 16:34:39', '2025-11-10 02:23:23'),
-(3, 'payment_method_pix', '1', 'boolean', 'Método de pagamento PIX ativo', '2025-11-09 16:34:39', '2025-11-09 21:02:54'),
-(4, 'payment_method_credit_card', '1', 'boolean', 'Método de pagamento Cartão de Crédito ativo', '2025-11-09 16:34:39', '2025-11-09 21:02:54'),
-(5, 'payment_method_boleto', '1', 'boolean', 'Método de pagamento Boleto ativo', '2025-11-09 16:34:39', '2025-11-09 21:02:54'),
-(6, 'min_withdraw', '10', 'decimal', 'Valor mÃ­nimo para saque', '2025-11-09 22:45:40', '2025-11-10 04:53:59'),
-(7, 'fixed_withdraw_fee', '5', 'decimal', 'Taxa fixa de saque (R$)', '2025-11-09 22:45:40', '2025-11-10 02:30:17'),
-(8, 'percent_withdraw_fee', '0', 'decimal', 'Taxa percentual de saque (%)', '2025-11-09 22:45:40', '2025-11-09 22:45:40'),
-(9, 'transfer_mode', 'automatico', 'string', 'Modo de transferência (manual/automatico)', '2025-11-09 22:45:40', '2025-11-09 23:35:50');
-/*!40000 ALTER TABLE `system_settings` ENABLE KEYS */;
+-- Dados da tabela `addresses`
+LOCK TABLES `addresses` WRITE;
+/*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
+INSERT INTO `addresses` (`id`, `user_id`, `zip_code`, `address`, `number`, `city`, `state`, `created_at`, `updated_at`) VALUES
+(1, 7, '57602-335', 'Travessa Vereador Zeca Paulo', '300', 'Maceió', 'AL', '2025-11-09 17:00:53', '2025-11-09 17:00:53'),
+(2, 8, '57602-335', 'Travessa Vereador Zeca Paulo', '300', 'Maceió', 'AL', '2025-11-09 17:40:37', '2025-11-09 17:40:37');
+/*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+-- Estrutura da tabela `financial_settings`
+DROP TABLE IF EXISTS `financial_settings`;
+CREATE TABLE `financial_settings` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `cash_in_percentage` DECIMAL(10,2) NOT NULL DEFAULT '5',
+  `cash_in_fixed_value` DECIMAL(10,2) NOT NULL default '2.5',
+  `cash_out_percentage` DECIMAL(10,2) NOT NULL default '3.5',
+  `cash_out_fixed_value` DECIMAL(10,2) NOT NULL default '1.8',
+  `minimum_cash_in_value` DECIMAL(10,2) NOT NULL DEFAULT '10',
+  `maximum_cash_in_value` DECIMAL(10,2) NOT NULL DEFAULT '50',
+  `minimum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT '5',
+  `maximum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT '25',
+  `created_at` datetime,
+  `updated_at` datetime,
+  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `financial_settings`: vazia
 
 
 -- Estrutura da tabela `fullpix_sales`
@@ -609,6 +452,93 @@ INSERT INTO `fullpix_sales` (`id`, `user_id`, `fullpix_transaction_id`, `referen
 UNLOCK TABLES;
 
 
+-- Estrutura da tabela `groups`
+DROP TABLE IF EXISTS `groups`;
+CREATE TABLE `groups` (
+  `id` VARCHAR(255) NOT NULL,
+  `user_id` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `created_at` datetime,
+  `updated_at` datetime,
+  FOREIGN KEY(`user_id`) references `users`(`id`),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `groups`
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+INSERT INTO `groups` (`id`, `user_id`, `name`, `description`, `created_at`, `updated_at`) VALUES
+('019a6978-41cf-726f-a753-cedffa7fa8dc', 2, 'ipsam', 'Grupo de teste', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-41db-720c-9c54-2b38a1677974', 3, 'qui', 'Grupo de teste', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-41eb-72b1-b648-96e839b1e79a', 4, 'cumque', 'Grupo de teste', '2025-11-09 16:34:40', '2025-11-09 16:34:40');
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Estrutura da tabela `liberpay_sales`
+DROP TABLE IF EXISTS `liberpay_sales`;
+CREATE TABLE `liberpay_sales` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `liberpay_sale_id` VARCHAR(255) NOT NULL,
+  `reference_code` VARCHAR(255),
+  `external_reference` VARCHAR(255),
+  `amount` DECIMAL(10,2) NOT NULL,
+  `currency` VARCHAR(255) NOT NULL DEFAULT 'BRL',
+  `status` VARCHAR(255) CHECK (`status` IN ('pending', 'paid', 'expired', 'cancelled', 'refunded')) NOT NULL DEFAULT 'pending',
+  `pix_qr_code` TEXT,
+  `pix_qr_code_image` TEXT,
+  `expires_at` datetime,
+  `paid_at` datetime,
+  `metadata` TEXT,
+  `liberpay_response` TEXT,
+  `created_at` datetime,
+  `updated_at` datetime,
+  FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `liberpay_sales`: vazia
+
+
+-- Estrutura da tabela `members`
+DROP TABLE IF EXISTS `members`;
+CREATE TABLE `members` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `phone` VARCHAR(255) NOT NULL,
+  `alert_type` VARCHAR(255) CHECK (`alert_type` IN ('error', 'warning', 'info', 'debug', 'critical', 'success', 'unknown', 'fatal', 'notice', 'alert', 'emergency')),
+  `notifications` tinyint(1) NOT NULL DEFAULT '1',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `alert_channels` TEXT NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime,
+  FOREIGN KEY(`user_id`) references `users`(`id`),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `members`: vazia
+
+
+-- Estrutura da tabela `order_bumps`
+DROP TABLE IF EXISTS `order_bumps`;
+CREATE TABLE `order_bumps` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `checkout_id` VARCHAR(255) NOT NULL,
+  `product_id` VARCHAR(255) NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime,
+  FOREIGN KEY(`checkout_id`) references `checkouts`(`id`) on delete cascade on update cascade,
+  FOREIGN KEY(`product_id`) references `products`(`id`) on delete cascade on update cascade,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `order_bumps`: vazia
+
+
 -- Estrutura da tabela `pix_keys`
 DROP TABLE IF EXISTS `pix_keys`;
 CREATE TABLE `pix_keys` (
@@ -631,6 +561,56 @@ INSERT INTO `pix_keys` (`id`, `user_id`, `type`, `key`, `description`, `is_activ
 (1, 6, 'EMAIL', 'agenciapagamentoseguro@gmail.com', 'Banco Inter', 1, '2025-11-09 23:25:39', '2025-11-09 23:25:39'),
 (2, 6, 'EVP', '8637fe7f-b450-4661-a442-ac8903aafe6f', NULL, 1, '2025-11-10 04:42:09', '2025-11-10 04:42:09');
 /*!40000 ALTER TABLE `pix_keys` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Estrutura da tabela `products`
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE `products` (
+  `id` VARCHAR(255) NOT NULL,
+  `user_id` INT NOT NULL,
+  `category_id` VARCHAR(255),
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `image` VARCHAR(255),
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `type` VARCHAR(255) CHECK (`type` IN ('FISICAL', 'DIGITAL')) NOT NULL DEFAULT 'DIGITAL',
+  `price` DECIMAL(10,2) NOT NULL,
+  `stock` INT NOT NULL DEFAULT '0',
+  `is_sample` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` datetime,
+  `updated_at` datetime,
+  FOREIGN KEY(`user_id`) references `users`(`id`),
+  FOREIGN KEY(`category_id`) references `categories`(`id`),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `products`
+LOCK TABLES `products` WRITE;
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` (`id`, `user_id`, `category_id`, `name`, `description`, `image`, `status`, `type`, `price`, `stock`, `is_sample`, `created_at`, `updated_at`) VALUES
+('019a701b-95aa-719a-bcf9-4b918108ffa7', 6, NULL, 'Tropa galera', NULL, 'products/fd3SITX75yhRH9IwWwCvDvTJfrlJ2IVjAFw20w26.jpg', 1, 'DIGITAL', 10.5, 0, 0, '2025-11-10 23:30:47', '2025-11-10 23:30:47');
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Estrutura da tabela `system_images`
+DROP TABLE IF EXISTS `system_images`;
+CREATE TABLE `system_images` (
+  `id` INT AUTO_INCREMENT,
+  `key` TEXT UNIQUE NOT NULL,
+  `value` TEXT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `system_images`
+LOCK TABLES `system_images` WRITE;
+/*!40000 ALTER TABLE `system_images` DISABLE KEYS */;
+INSERT INTO `system_images` (`id`, `key`, `value`, `created_at`, `updated_at`) VALUES
+(1, 'banner_promocional', 'system/banner/QHT37BoZF6iS5YoU6sd6iPtlweTvNIa29gB1ymLw.png', '2025-11-10 01:58:48', '2025-11-10 01:58:48');
+/*!40000 ALTER TABLE `system_images` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
@@ -672,26 +652,6 @@ INSERT INTO `withdrawals` (`id`, `user_id`, `fullpix_withdrawal_id`, `pix_type`,
 UNLOCK TABLES;
 
 
--- Estrutura da tabela `system_images`
-DROP TABLE IF EXISTS `system_images`;
-CREATE TABLE `system_images` (
-  `id` INT AUTO_INCREMENT,
-  `key` TEXT UNIQUE NOT NULL,
-  `value` TEXT NOT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `system_images`
-LOCK TABLES `system_images` WRITE;
-/*!40000 ALTER TABLE `system_images` DISABLE KEYS */;
-INSERT INTO `system_images` (`id`, `key`, `value`, `created_at`, `updated_at`) VALUES
-(1, 'banner_promocional', 'system/banner/QHT37BoZF6iS5YoU6sd6iPtlweTvNIa29gB1ymLw.png', '2025-11-10 01:58:48', '2025-11-10 01:58:48');
-/*!40000 ALTER TABLE `system_images` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
 -- Estrutura da tabela `checkouts`
 DROP TABLE IF EXISTS `checkouts`;
 CREATE TABLE `checkouts` (
@@ -726,7 +686,7 @@ CREATE TABLE `checkouts` (
   `order_bump_cta_text` VARCHAR(255) NOT NULL DEFAULT 'Quero comprar também!',
   `order_bump_cta_bg_color` VARCHAR(255) NOT NULL DEFAULT '#10b981',
   `order_bump_cta_text_color` VARCHAR(255) NOT NULL DEFAULT '#ffffff',
-  `order_bump_recommended_text` VARCHAR(255) NOT NULL DEFAULT '(Recomendado)',
+  `order_bump_recommended_text` VARCHAR(255) NOT NULL DEFAULT '(Recomendado''),
   `order_bump_recommended_color` VARCHAR(255) NOT NULL DEFAULT '#fbbf24',
   `order_bump_enabled` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
@@ -742,6 +702,76 @@ INSERT INTO `checkouts` (`id`, `user_id`, `product_id`, `discount_percentage`, `
 ('019a700e-1612-7178-91cb-ced18ae807fb', 6, '019a6fd1-51a4-73d1-8c89-a80dfe89794b', 0, 'single', NULL, 0, '🔥', 3600, '#dc2626', '#ffffff', 'Oferta por tempo limitado!', 0, '#2563eb', '#6b7280', '#1d4ed8', '#4b5563', '{\"name\":{\"required\":true,\"visible\":true,\"order\":1,\"label\":\"Nome completo\"},\"email\":{\"required\":true,\"visible\":true,\"order\":2,\"label\":\"E-mail\"},\"phone\":{\"required\":false,\"visible\":false,\"order\":3,\"label\":\"Telefone\"},\"cpf\":{\"required\":false,\"visible\":false,\"order\":4,\"label\":\"CPF\"},\"zip_code\":{\"required\":false,\"visible\":false,\"order\":5,\"label\":\"CEP\"},\"address\":{\"required\":false,\"visible\":false,\"order\":6,\"label\":\"Endere\\u00e7o\"},\"city\":{\"required\":false,\"visible\":false,\"order\":7,\"label\":\"Cidade\"},\"state\":{\"required\":false,\"visible\":false,\"order\":8,\"label\":\"Estado\"},\"number\":{\"required\":false,\"visible\":false,\"order\":9,\"label\":\"N\\u00famero\"},\"complement\":{\"required\":false,\"visible\":false,\"order\":10,\"label\":\"Complemento\"}}', '[\"name\",\"email\"]', '#ffffff', '#000000', 1, '[{\"step\":1,\"title\":\"Passo 1\",\"description\":\"Descri\\u00e7\\u00e3o do passo 1\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"},{\"step\":2,\"title\":\"Passo 2\",\"description\":\"Descri\\u00e7\\u00e3o do passo 2\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"},{\"step\":3,\"title\":\"Passo 3\",\"description\":\"Descri\\u00e7\\u00e3o do passo 3\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"}]', '[{\"name\":\"pix\",\"label\":\"PIX\",\"icon\":\"pix\",\"image\":\"\\/images\\/icons\\/icon-pix.png\",\"show_image\":true,\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#dbdbdb\",\"enabled\":true},{\"name\":\"credit_card\",\"label\":\"Cart\\u00e3o de Cr\\u00e9dito\",\"icon\":\"credit_card\",\"image\":\"\\/images\\/icons\\/icon-credit-card.png\",\"show_image\":false,\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#2980b9\",\"enabled\":false},{\"name\":\"boleto\",\"label\":\"Boleto\",\"icon\":\"boleto\",\"image\":\"\\/images\\/icons\\/icon-boleto.png\",\"show_image\":false,\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#e67e22\",\"enabled\":false}]', '#ffffff', '#0f172a', '#fbbf24', NULL, 'Quero comprar também!', '#10b981', '#ffffff', '(Recomendado)', '#fbbf24', 1, '2025-11-10 23:16:02', '2025-11-10 23:16:02'),
 ('019a7046-265a-7389-9c3f-f515c9bc9a95', 6, '019a701b-95aa-719a-bcf9-4b918108ffa7', 0, 'single', NULL, 0, '🔥', 3600, '#dc2626', '#ffffff', 'Oferta por tempo limitado!', 0, '#2563eb', '#6b7280', '#1d4ed8', '#4b5563', '{\"name\":{\"required\":true,\"visible\":true,\"order\":\"1\",\"label\":\"Nome completo\"},\"email\":{\"required\":true,\"visible\":true,\"order\":\"2\",\"label\":\"E-mail\"},\"phone\":{\"required\":false,\"visible\":false,\"order\":\"3\",\"label\":\"Telefone\"},\"cpf\":{\"required\":false,\"visible\":false,\"order\":\"4\",\"label\":\"CPF\"},\"zip_code\":{\"required\":false,\"visible\":false,\"order\":\"5\",\"label\":\"CEP\"},\"address\":{\"required\":false,\"visible\":false,\"order\":\"6\",\"label\":\"Endere\\u00e7o\"},\"city\":{\"required\":false,\"visible\":false,\"order\":\"7\",\"label\":\"Cidade\"},\"state\":{\"required\":false,\"visible\":false,\"order\":\"8\",\"label\":\"Estado\"},\"number\":{\"required\":false,\"visible\":false,\"order\":\"9\",\"label\":\"N\\u00famero\"},\"complement\":{\"required\":false,\"visible\":false,\"order\":\"10\",\"label\":\"Complemento\"}}', '[\"name\",\"email\"]', '#ffffff', '#000000', 1, '[{\"step\":\"1\",\"title\":\"Passo 1\",\"description\":\"Descri\\u00e7\\u00e3o do passo 1\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"},{\"step\":\"2\",\"title\":\"Passo 2\",\"description\":\"Descri\\u00e7\\u00e3o do passo 2\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"},{\"step\":\"3\",\"title\":\"Passo 3\",\"description\":\"Descri\\u00e7\\u00e3o do passo 3\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"}]', '[{\"name\":\"pix\",\"label\":\"PIX\",\"icon\":\"pix\",\"image\":\"\\/images\\/icons\\/icon-pix.png\",\"show_image\":\"1\",\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#dbdbdb\",\"enabled\":\"1\"},{\"name\":\"credit_card\",\"label\":\"Cart\\u00e3o de Cr\\u00e9dito\",\"icon\":\"credit_card\",\"image\":\"\\/images\\/icons\\/icon-credit-card.png\",\"show_image\":\"0\",\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#2980b9\",\"enabled\":\"0\"},{\"name\":\"boleto\",\"label\":\"Boleto\",\"icon\":\"boleto\",\"image\":\"\\/images\\/icons\\/icon-boleto.png\",\"show_image\":\"0\",\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#e67e22\",\"enabled\":\"0\"}]', '#ffffff', '#0f172a', '#fbbf24', NULL, 'Quero comprar também!', '#10b981', '#ffffff', '(Recomendado)', '#fbbf24', 1, '2025-11-11 00:17:16', '2025-11-11 04:47:21');
 /*!40000 ALTER TABLE `checkouts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Estrutura da tabela `member_role`
+DROP TABLE IF EXISTS `member_role`;
+CREATE TABLE `member_role` (
+  `member_id` INT NOT NULL,
+  `role_id` INT NOT NULL,
+  FOREIGN KEY(`member_id`) references `members`(`id`),
+  FOREIGN KEY(`role_id`) references `roles`(`id`),
+  PRIMARY KEY (`member_id`, `role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `member_role`: vazia
+
+
+-- Estrutura da tabela `permission_role`
+DROP TABLE IF EXISTS `permission_role`;
+CREATE TABLE `permission_role` (
+  `permission_id` INT NOT NULL,
+  `role_id` INT NOT NULL,
+  FOREIGN KEY(`permission_id`) references `permissions`(`id`),
+  FOREIGN KEY(`role_id`) references `roles`(`id`),
+  PRIMARY KEY (`permission_id`, `role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `permission_role`: vazia
+
+
+-- Estrutura da tabela `permission_user`
+DROP TABLE IF EXISTS `permission_user`;
+CREATE TABLE `permission_user` (
+  `user_id` INT NOT NULL,
+  `permission_id` INT NOT NULL,
+  FOREIGN KEY(`user_id`) references `users`(`id`),
+  FOREIGN KEY(`permission_id`) references `permissions`(`id`),
+  PRIMARY KEY (`user_id`, `permission_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `permission_user`
+LOCK TABLES `permission_user` WRITE;
+/*!40000 ALTER TABLE `permission_user` DISABLE KEYS */;
+INSERT INTO `permission_user` (`user_id`, `permission_id`) VALUES
+(1, 1),
+(6, 1),
+(6, 2),
+(6, 3),
+(6, 4),
+(6, 5);
+/*!40000 ALTER TABLE `permission_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+-- Estrutura da tabela `role_user`
+DROP TABLE IF EXISTS `role_user`;
+CREATE TABLE `role_user` (
+  `role_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  FOREIGN KEY(`role_id`) references `roles`(`id`),
+  FOREIGN KEY(`user_id`) references `users`(`id`),
+  PRIMARY KEY (`role_id`, `user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `role_user`
+LOCK TABLES `role_user` WRITE;
+/*!40000 ALTER TABLE `role_user` DISABLE KEYS */;
+INSERT INTO `role_user` (`role_id`, `user_id`) VALUES
+(1, 1),
+(1, 6);
+/*!40000 ALTER TABLE `role_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
@@ -779,36 +809,6 @@ INSERT INTO `transactions` (`id`, `user_id`, `invoice`, `payment_status`, `total
 (13, 6, 'FPX-e5b7ff68-605c-4bae-906c-d48352da1a40', 'Paid', 10, 'PIX', 7.72, 'e5b7ff68-605c-4bae-906c-d48352da1a40', '2025-11-10 04:56:14', 1.78, '2025-11-10 04:56:14', '2025-11-10 04:56:14', 0, NULL),
 (14, 6, 'FPX-47428486-d2f6-45dc-b908-45464f10980d', 'Paid', 1, 'PIX', 0, '47428486-d2f6-45dc-b908-45464f10980d', '2025-11-11 00:00:00', 1.51, '2025-11-11 04:55:17', '2025-11-11 04:55:17', 0, NULL);
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
--- Estrutura da tabela `products`
-DROP TABLE IF EXISTS `products`;
-CREATE TABLE `products` (
-  `id` VARCHAR(255) NOT NULL,
-  `user_id` INT NOT NULL,
-  `category_id` VARCHAR(255),
-  `name` VARCHAR(255) NOT NULL,
-  `description` VARCHAR(255),
-  `image` VARCHAR(255),
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  `type` VARCHAR(255) CHECK (`type` IN ('FISICAL', 'DIGITAL')) NOT NULL DEFAULT 'DIGITAL',
-  `price` DECIMAL(10,2) NOT NULL,
-  `stock` INT NOT NULL DEFAULT '0',
-  `is_sample` tinyint(1) NOT NULL DEFAULT '0',
-  `created_at` datetime,
-  `updated_at` datetime,
-  FOREIGN KEY(`user_id`) references `users`(`id`),
-  FOREIGN KEY(`category_id`) references `categories`(`id`),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `products`
-LOCK TABLES `products` WRITE;
-/*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` (`id`, `user_id`, `category_id`, `name`, `description`, `image`, `status`, `type`, `price`, `stock`, `is_sample`, `created_at`, `updated_at`) VALUES
-('019a701b-95aa-719a-bcf9-4b918108ffa7', 6, NULL, 'Tropa galera', NULL, 'products/fd3SITX75yhRH9IwWwCvDvTJfrlJ2IVjAFw20w26.jpg', 1, 'DIGITAL', 10.5, 0, 0, '2025-11-10 23:30:47', '2025-11-10 23:30:47');
-/*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
 

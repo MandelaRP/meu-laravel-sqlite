@@ -59,6 +59,9 @@ class ConvertSqliteToMysql extends Command
 
             $this->info("📊 Encontradas " . count($tables) . " tabelas.");
 
+            // Ordenar tabelas por dependências (FOREIGN KEYs)
+            $tables = $this->orderTablesByDependencies($tables);
+
             // Abrir arquivo para escrita
             $sqlFile = fopen($outputPath, 'w');
             
@@ -115,6 +118,68 @@ class ConvertSqliteToMysql extends Command
     {
         $tables = DB::select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
         return array_map(fn($table) => $table->name, $tables);
+    }
+
+    /**
+     * Ordenar tabelas por dependências (FOREIGN KEYs)
+     */
+    private function orderTablesByDependencies(array $tables): array
+    {
+        // Ordem de prioridade baseada em dependências conhecidas
+        $priority = [
+            // Tabelas sem dependências (primeiro)
+            'migrations' => 1,
+            'password_reset_tokens' => 1,
+            'sessions' => 1,
+            'cache' => 1,
+            'cache_locks' => 1,
+            'jobs' => 1,
+            'job_batches' => 1,
+            'failed_jobs' => 1,
+            'roles' => 2,
+            'permissions' => 2,
+            'categories' => 2,
+            'acquirers' => 2,
+            'system_settings' => 2,
+            
+            // users deve ser criada antes de todas que a referenciam
+            'users' => 3,
+            
+            // Tabelas que dependem de users ou outras tabelas básicas
+            'groups' => 4,
+            'members' => 4,
+            'addresses' => 4,
+            'financial_settings' => 4,
+            'order_bumps' => 4,
+            'liberpay_sales' => 4,
+            'fullpix_sales' => 4,
+            'pix_keys' => 4,
+            'withdrawals' => 4,
+            'system_images' => 4,
+            'products' => 4, // products depende de categories, mas categories já está na prioridade 2
+            'checkouts' => 5, // checkouts depende de products
+            'transactions' => 5, // transactions depende de products e checkouts
+            
+            // Tabelas de relacionamento (dependem de roles, permissions, members, users)
+            'permission_role' => 5,
+            'role_user' => 5,
+            'permission_user' => 5,
+            'member_role' => 5,
+        ];
+
+        // Ordenar tabelas pela prioridade
+        usort($tables, function($a, $b) use ($priority) {
+            $priorityA = $priority[$a] ?? 99;
+            $priorityB = $priority[$b] ?? 99;
+            
+            if ($priorityA === $priorityB) {
+                return strcmp($a, $b);
+            }
+            
+            return $priorityA <=> $priorityB;
+        });
+
+        return $tables;
     }
 
     /**
@@ -310,8 +375,9 @@ class ConvertSqliteToMysql extends Command
                         $value = preg_replace('/^[\'"]+|[\'"]+$/', '', $value);
                         // Remover qualquer aspas dupla restante (ex: '' no final ou início)
                         $value = preg_replace("/^''|''$/", '', $value);
-                        // Limpar qualquer aspas duplas no meio também
-                        $value = str_replace("''", '', $value);
+                        // Limpar qualquer aspas duplas no meio também (mas preservar o conteúdo)
+                        // Se o valor contém parênteses, pode ter aspas duplas que precisam ser removidas
+                        $value = preg_replace("/''/", '', $value);
                         if (is_numeric($value)) {
                             return 'DEFAULT ' . $value;
                         }
