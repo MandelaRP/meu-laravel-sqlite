@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->ensureStorageDirectoriesExist();
         $this->configModels();
         $this->setupLogViewer();
         $this->configCommands();
@@ -39,6 +40,28 @@ class AppServiceProvider extends ServiceProvider
         $this->configDate();
         $this->configGates();
         $this->registerObservers();
+    }
+
+    /**
+     * Garantir que todas as pastas de storage existam
+     */
+    private function ensureStorageDirectoriesExist(): void
+    {
+        $directories = [
+            storage_path('app/public'),
+            storage_path('framework/cache/data'),
+            storage_path('framework/sessions'),
+            storage_path('framework/testing'),
+            storage_path('framework/views'),
+            storage_path('logs'),
+            base_path('bootstrap/cache'),
+        ];
+
+        foreach ($directories as $directory) {
+            if (!is_dir($directory)) {
+                @mkdir($directory, 0755, true);
+            }
+        }
     }
 
     private function registerObservers(): void
