@@ -491,8 +491,9 @@ class ConvertSqliteToMysql extends Command
                         $value = preg_replace("/^''+|''+$/", '', $value);
                         // Limpar qualquer aspas duplas no meio também (mas preservar o conteúdo)
                         // Se o valor contém parênteses, pode ter aspas duplas que precisam ser removidas
-                        $value = preg_replace("/''/", "'", $value); // Substituir '' por ' (aspas simples escapadas)
-                        // Escapar aspas simples dentro do valor
+                        // Substituir '' por nada (remover aspas duplas)
+                        $value = preg_replace("/''/", '', $value);
+                        // Escapar aspas simples dentro do valor para MySQL
                         $value = str_replace("'", "\\'", $value);
                         if (is_numeric($value)) {
                             return 'DEFAULT ' . $value;
