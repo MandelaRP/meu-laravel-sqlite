@@ -1,0 +1,36 @@
+╔══════════════════════════════════════════════════════════════╗
+║     ⚠️ IMPORTANTE: Assets Não Estão no Git!                ║
+╚══════════════════════════════════════════════════════════════╝
+
+❌ PROBLEMA: Página em branco, assets não carregam
+
+✅ SOLUÇÃO RÁPIDA:
+
+1. No seu computador, execute:
+   npm install
+   npm run build
+
+2. Faça upload da pasta: public/build/
+   (TODA a pasta, com todos os arquivos dentro)
+
+3. Teste: https://auraspay.online
+
+═══════════════════════════════════════════════════════════════
+
+📋 VERIFICAÇÃO NO SERVIDOR:
+
+1. Faça upload do arquivo: VERIFICAR_ASSETS.php
+2. Acesse: https://auraspay.online/VERIFICAR_ASSETS.php
+3. Siga as instruções que aparecerem
+
+═══════════════════════════════════════════════════════════════
+
+🔄 APÓS MUDANÇAS NO FRONTEND:
+
+Sempre que modificar resources/js/ ou resources/css/:
+
+1. Execute: npm run build
+2. Faça upload de public/build/ novamente
+
+═══════════════════════════════════════════════════════════════
+
