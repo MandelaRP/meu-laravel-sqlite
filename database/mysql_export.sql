@@ -312,7 +312,7 @@ CREATE TABLE `users` (
   `cash_out_percentage` DECIMAL(10,2),
   `cash_out_fixed` DECIMAL(10,2),
   `preferred_acquirer` VARCHAR(255),
-  FOREIGN KEY (`acquirer_id`) REFERENCES `acquirers` (`id`) on delete set null,
+  FOREIGN KEY (`acquirer_id`) REFERENCES `acquirers` (`id`) ON DELETE SET NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -535,8 +535,8 @@ CREATE TABLE `order_bumps` (
   `product_id` VARCHAR(255) NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) on delete cascade on update cascade,
-  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) on delete cascade on update cascade,
+  FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -668,7 +668,7 @@ CREATE TABLE `checkouts` (
   `order_bump_enabled` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete no action on update no action,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -800,7 +800,7 @@ CREATE TABLE `transactions` (
   `updated_at` datetime,
   `is_sample` tinyint(1) NOT NULL DEFAULT '0',
   `product_id` VARCHAR(255),
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade on update no action,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
