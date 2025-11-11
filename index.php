@@ -36,19 +36,24 @@ if (file_exists($maintenance = $laravelPath . '/storage/framework/maintenance.ph
 require $laravelPath . '/vendor/autoload.php';
 
 // Servir arquivos estáticos diretamente (assets, imagens, etc)
+// Isso garante que os assets sejam servidos mesmo se o .htaccess não funcionar
 $requestUri = $_SERVER['REQUEST_URI'] ?? '';
-$requestFile = $laravelPath . '/public' . parse_url($requestUri, PHP_URL_PATH);
-
-// Se for um arquivo estático que existe, servir diretamente
-if ($requestUri && file_exists($requestFile) && is_file($requestFile)) {
-    // Verificar se é um arquivo de asset ou imagem
-    if (preg_match('#^/(build|images|vendor|favicon\.ico|robots\.txt)#', $requestUri)) {
-        $mimeType = mime_content_type($requestFile);
-        if ($mimeType) {
-            header('Content-Type: ' . $mimeType);
+if ($requestUri) {
+    $parsedUri = parse_url($requestUri, PHP_URL_PATH);
+    if ($parsedUri && preg_match('#^/(build|images|vendor|favicon\.ico|robots\.txt)#', $parsedUri)) {
+        $requestFile = $laravelPath . '/public' . $parsedUri;
+        if (file_exists($requestFile) && is_file($requestFile)) {
+            $mimeType = mime_content_type($requestFile);
+            if ($mimeType) {
+                header('Content-Type: ' . $mimeType);
+            }
+            // Cache headers para assets
+            if (preg_match('#\.(js|css)$#', $requestFile)) {
+                header('Cache-Control: public, max-age=31536000');
+            }
+            readfile($requestFile);
+            exit;
         }
-        readfile($requestFile);
-        exit;
     }
 }
 
