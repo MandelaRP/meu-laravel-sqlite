@@ -1,5 +1,5 @@
 -- Exportação de SQLite para MySQL
--- Gerado em: 2025-11-11 16:20:07
+-- Gerado em: 2025-11-11 16:23:54
 -- 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";

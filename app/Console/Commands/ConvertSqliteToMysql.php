@@ -308,9 +308,10 @@ class ConvertSqliteToMysql extends Command
                         $value = trim($m[1]);
                         // Remover todas as aspas (simples e duplas) do início e fim
                         $value = preg_replace('/^[\'"]+|[\'"]+$/', '', $value);
-                        // Remover qualquer aspas dupla restante (ex: '' no final)
-                        $value = preg_replace("/''$/", '', $value);
-                        $value = preg_replace("/^''/", '', $value);
+                        // Remover qualquer aspas dupla restante (ex: '' no final ou início)
+                        $value = preg_replace("/^''|''$/", '', $value);
+                        // Limpar qualquer aspas duplas no meio também
+                        $value = str_replace("''", '', $value);
                         if (is_numeric($value)) {
                             return 'DEFAULT ' . $value;
                         }
