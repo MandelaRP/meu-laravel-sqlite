@@ -284,6 +284,7 @@ class ConvertSqliteToMysql extends Command
             $columns = preg_split('/,\s*(?![^()]*\))/', $columnsDef);
             $convertedColumns = [];
             $primaryKeys = [];
+            $checkConstraints = [];
             
             foreach ($columns as $column) {
                 $column = trim($column);
@@ -330,22 +331,21 @@ class ConvertSqliteToMysql extends Command
                         $colDef = preg_replace('/\bvarchar\b/i', 'VARCHAR(255)', $colDef);
                     }
                     
-                    // Corrigir CHECK constraints - adicionar aspas nos valores
-                    $colDef = preg_replace_callback('/check\s*\((\w+)\s+in\s*\(([^)]+)\)\)/i', function($m) {
-                        $columnName = $m[1];
-                        $values = $m[2];
-                        // Dividir valores e adicionar aspas
-                        $valueList = preg_split('/\s*,\s*/', $values);
-                        $quotedValues = array_map(function($val) {
-                            $val = trim($val);
-                            // Se já tem aspas, manter; senão, adicionar
-                            if (preg_match('/^[\'"]/', $val)) {
-                                return $val;
-                            }
-                            return "'{$val}'";
-                        }, $valueList);
-                        return "CHECK (`{$columnName}` IN (" . implode(', ', $quotedValues) . "))";
-                    }, $colDef);
+                    // Remover CHECK constraints da definição da coluna (serão adicionadas como constraints separadas)
+                    // No MySQL, CHECK deve vir depois de todas as colunas, não no meio
+                    if (preg_match('/CHECK\s*\(/i', $colDef)) {
+                        // Extrair a constraint CHECK completa (pode ter parênteses aninhados)
+                        if (preg_match('/CHECK\s*\(([^)]*(?:\([^)]*\)[^)]*)*)\)/i', $colDef, $checkMatch)) {
+                            $checkConstraint = trim($checkMatch[0]);
+                            // Remover CHECK da definição da coluna (incluindo qualquer espaço antes)
+                            $colDef = preg_replace('/\s*CHECK\s*\([^)]*(?:\([^)]*\)[^)]*)*\)/i', '', $colDef);
+                            // Limpar parênteses extras que possam ter ficado
+                            $colDef = preg_replace('/\)\s*\)/', ')', $colDef);
+                            $colDef = preg_replace('/\(\s*\(/', '(', $colDef);
+                            // Adicionar à lista de constraints CHECK (será processada depois)
+                            $checkConstraints[] = $checkConstraint;
+                        }
+                    }
                     
                     $colDef = preg_replace('/\bTEXT\b/i', 'TEXT', $colDef);
                     $colDef = preg_replace('/\bBLOB\b/i', 'BLOB', $colDef);
@@ -393,14 +393,17 @@ class ConvertSqliteToMysql extends Command
                     }, $colDef);
                     
                     // Normalizar DEFAULT em minúsculas para maiúsculas e adicionar aspas se necessário
-                    $colDef = preg_replace_callback('/\bdefault\s+(\w+)/i', function($m) {
-                        $value = $m[1];
+                    $colDef = preg_replace_callback('/\bdefault\s+([\'"]?)([^\'"]+)\1/i', function($m) {
+                        $value = $m[2];
                         // Se não é CURRENT_TIMESTAMP, adicionar aspas
                         if (strtoupper($value) !== 'CURRENT_TIMESTAMP') {
                             return "DEFAULT '{$value}'";
                         }
                         return 'DEFAULT CURRENT_TIMESTAMP';
                     }, $colDef);
+                    
+                    // Garantir que DEFAULT está em maiúsculas
+                    $colDef = preg_replace('/\bdefault\b/i', 'DEFAULT', $colDef);
                     
                     // Converter datetime para TIMESTAMP se tiver DEFAULT CURRENT_TIMESTAMP
                     // Fazer isso DEPOIS de processar DEFAULT
@@ -432,6 +435,42 @@ class ConvertSqliteToMysql extends Command
             if (!empty($primaryKeys) && !preg_match('/PRIMARY KEY/i', implode(' ', $convertedColumns))) {
                 $pkCols = array_map(fn($col) => "`{$col}`", $primaryKeys);
                 $convertedColumns[] = "PRIMARY KEY (" . implode(', ', $pkCols) . ")";
+            }
+            
+            // Adicionar CHECK constraints no final (depois de todas as colunas, antes do PRIMARY KEY)
+            if (!empty($checkConstraints)) {
+                foreach ($checkConstraints as $check) {
+                    // Corrigir sintaxe CHECK - adicionar aspas nos valores se necessário
+                    $check = preg_replace_callback('/CHECK\s*\((\w+)\s+IN\s*\(([^)]+)\)\)/i', function($m) {
+                        $columnName = $m[1];
+                        $values = $m[2];
+                        // Dividir valores e adicionar aspas
+                        $valueList = preg_split('/\s*,\s*/', $values);
+                        $quotedValues = array_map(function($val) {
+                            $val = trim($val);
+                            // Se já tem aspas, manter; senão, adicionar
+                            if (preg_match('/^[\'"]/', $val)) {
+                                return $val;
+                            }
+                            return "'{$val}'";
+                        }, $valueList);
+                        return "CHECK (`{$columnName}` IN (" . implode(', ', $quotedValues) . "))";
+                    }, $check);
+                    // Normalizar CHECK para maiúsculas
+                    $check = preg_replace('/\bcheck\b/i', 'CHECK', $check);
+                    // Adicionar antes do PRIMARY KEY se houver
+                    $hasPrimaryKey = false;
+                    foreach ($convertedColumns as $idx => $col) {
+                        if (preg_match('/PRIMARY KEY/i', $col)) {
+                            array_splice($convertedColumns, $idx, 0, [$check]);
+                            $hasPrimaryKey = true;
+                            break;
+                        }
+                    }
+                    if (!$hasPrimaryKey) {
+                        $convertedColumns[] = $check;
+                    }
+                }
             }
             
             // Reconstruir CREATE TABLE
