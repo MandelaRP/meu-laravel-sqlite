@@ -1,0 +1,278 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+class ConvertSqliteToMysql extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'db:convert-sqlite-to-mysql 
+                            {--output= : Caminho do arquivo SQL de saída (padrão: database/mysql_export.sql)}
+                            {--sqlite-path= : Caminho do arquivo SQLite (padrão: database/database.sqlite)}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Converte banco de dados SQLite para formato SQL compatível com MySQL';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(): int
+    {
+        $sqlitePath = $this->option('sqlite-path') ?: database_path('database.sqlite');
+        $outputPath = $this->option('output') ?: database_path('mysql_export.sql');
+
+        // Verificar se arquivo SQLite existe
+        if (!file_exists($sqlitePath)) {
+            $this->error("Arquivo SQLite não encontrado: {$sqlitePath}");
+            return Command::FAILURE;
+        }
+
+        $this->info("🔄 Convertendo SQLite para MySQL...");
+        $this->info("📁 SQLite: {$sqlitePath}");
+        $this->info("📁 Saída: {$outputPath}");
+
+        // Conectar ao SQLite
+        config(['database.default' => 'sqlite']);
+        config(['database.connections.sqlite.database' => $sqlitePath]);
+
+        try {
+            // Obter todas as tabelas
+            $tables = $this->getTables();
+            
+            if (empty($tables)) {
+                $this->warn("⚠️  Nenhuma tabela encontrada no banco SQLite.");
+                return Command::FAILURE;
+            }
+
+            $this->info("📊 Encontradas " . count($tables) . " tabelas.");
+
+            // Abrir arquivo para escrita
+            $sqlFile = fopen($outputPath, 'w');
+            
+            if (!$sqlFile) {
+                $this->error("❌ Não foi possível criar o arquivo de saída: {$outputPath}");
+                return Command::FAILURE;
+            }
+
+            // Escrever cabeçalho
+            fwrite($sqlFile, "-- Exportação de SQLite para MySQL\n");
+            fwrite($sqlFile, "-- Gerado em: " . date('Y-m-d H:i:s') . "\n");
+            fwrite($sqlFile, "-- \n\n");
+            fwrite($sqlFile, "SET SQL_MODE = \"NO_AUTO_VALUE_ON_ZERO\";\n");
+            fwrite($sqlFile, "SET time_zone = \"+00:00\";\n\n");
+            fwrite($sqlFile, "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n");
+            fwrite($sqlFile, "/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;\n");
+            fwrite($sqlFile, "/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;\n");
+            fwrite($sqlFile, "/*!40101 SET NAMES utf8mb4 */;\n\n");
+
+            // Processar cada tabela
+            foreach ($tables as $table) {
+                $this->line("📋 Processando tabela: {$table}");
+                $this->exportTable($sqlFile, $table);
+            }
+
+            // Escrever rodapé
+            fwrite($sqlFile, "\n/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n");
+            fwrite($sqlFile, "/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;\n");
+            fwrite($sqlFile, "/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;\n");
+
+            fclose($sqlFile);
+
+            $this->info("✅ Conversão concluída!");
+            $this->info("📄 Arquivo gerado: {$outputPath}");
+            $this->info("\n📋 Próximos passos:");
+            $this->info("1. Acesse o phpMyAdmin da sua hospedagem");
+            $this->info("2. Selecione ou crie o banco de dados");
+            $this->info("3. Vá em 'Importar'");
+            $this->info("4. Selecione o arquivo: {$outputPath}");
+            $this->info("5. Clique em 'Executar'");
+
+            return Command::SUCCESS;
+        } catch (\Exception $e) {
+            $this->error("❌ Erro durante a conversão: " . $e->getMessage());
+            $this->error($e->getTraceAsString());
+            return Command::FAILURE;
+        }
+    }
+
+    /**
+     * Obter lista de tabelas do SQLite
+     */
+    private function getTables(): array
+    {
+        $tables = DB::select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
+        return array_map(fn($table) => $table->name, $tables);
+    }
+
+    /**
+     * Exportar tabela para SQL
+     */
+    private function exportTable($file, string $tableName): void
+    {
+        // Obter estrutura da tabela
+        $createTable = DB::select("SELECT sql FROM sqlite_master WHERE type='table' AND name=?", [$tableName]);
+        
+        if (empty($createTable)) {
+            return;
+        }
+
+        $createSql = $createTable[0]->sql;
+        
+        // Converter sintaxe SQLite para MySQL
+        $createSql = $this->convertCreateTable($createSql, $tableName);
+        
+        fwrite($file, "\n-- Estrutura da tabela `{$tableName}`\n");
+        fwrite($file, "DROP TABLE IF EXISTS `{$tableName}`;\n");
+        fwrite($file, $createSql . ";\n\n");
+
+        // Obter dados
+        $rows = DB::table($tableName)->get();
+        
+        if ($rows->isEmpty()) {
+            fwrite($file, "-- Dados da tabela `{$tableName}`: vazia\n\n");
+            return;
+        }
+
+        fwrite($file, "-- Dados da tabela `{$tableName}`\n");
+        fwrite($file, "LOCK TABLES `{$tableName}` WRITE;\n");
+        fwrite($file, "/*!40000 ALTER TABLE `{$tableName}` DISABLE KEYS */;\n");
+
+        // Inserir dados
+        $columns = array_keys((array) $rows->first());
+        $insertSql = "INSERT INTO `{$tableName}` (`" . implode('`, `', $columns) . "`) VALUES\n";
+
+        $values = [];
+        $batchSize = 100; // Inserir em lotes de 100 registros
+        $count = 0;
+        
+        foreach ($rows as $row) {
+            $rowArray = (array) $row;
+            $rowValues = [];
+            
+            foreach ($columns as $col) {
+                $value = $rowArray[$col] ?? null;
+                
+                if ($value === null) {
+                    $rowValues[] = 'NULL';
+                } elseif (is_bool($value)) {
+                    $rowValues[] = $value ? '1' : '0';
+                } elseif (is_numeric($value) && !is_string($value)) {
+                    $rowValues[] = $value;
+                } else {
+                    // Escapar strings corretamente para MySQL
+                    $escaped = str_replace(
+                        ['\\', "\x00", "\n", "\r", "'", '"', "\x1a"],
+                        ['\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'],
+                        (string) $value
+                    );
+                    $rowValues[] = "'{$escaped}'";
+                }
+            }
+            
+            $values[] = "(" . implode(', ', $rowValues) . ")";
+            $count++;
+            
+            // Escrever em lotes para evitar arquivos muito grandes
+            if ($count % $batchSize === 0) {
+                fwrite($file, $insertSql . implode(",\n", $values) . ";\n");
+                $values = [];
+                $insertSql = "INSERT INTO `{$tableName}` (`" . implode('`, `', $columns) . "`) VALUES\n";
+            }
+        }
+        
+        // Escrever registros restantes
+        if (!empty($values)) {
+            fwrite($file, $insertSql . implode(",\n", $values) . ";\n");
+        }
+        fwrite($file, "/*!40000 ALTER TABLE `{$tableName}` ENABLE KEYS */;\n");
+        fwrite($file, "UNLOCK TABLES;\n\n");
+    }
+
+    /**
+     * Converter CREATE TABLE do SQLite para MySQL
+     */
+    private function convertCreateTable(string $sql, string $tableName): string
+    {
+        // Remover comentários e normalizar
+        $sql = preg_replace('/--.*$/m', '', $sql);
+        $sql = preg_replace('/\/\*.*?\*\//s', '', $sql);
+        $sql = trim($sql);
+        
+        // Extrair definições de colunas
+        if (preg_match('/CREATE TABLE\s+(?:\w+\s+)?\((.+)\)/is', $sql, $matches)) {
+            $columnsDef = $matches[1];
+            
+            // Converter cada definição de coluna
+            $columns = preg_split('/,\s*(?![^()]*\))/', $columnsDef);
+            $convertedColumns = [];
+            
+            foreach ($columns as $column) {
+                $column = trim($column);
+                if (empty($column)) continue;
+                
+                // Extrair nome da coluna
+                if (preg_match('/^(["\']?)(\w+)\1\s+(.+)$/i', $column, $colMatches)) {
+                    $colName = $colMatches[2];
+                    $colDef = $colMatches[3];
+                    
+                    // Converter tipos de dados
+                    $colDef = preg_replace('/\bINTEGER\b/i', 'INT', $colDef);
+                    $colDef = preg_replace('/\bTEXT\b/i', 'TEXT', $colDef);
+                    $colDef = preg_replace('/\bBLOB\b/i', 'BLOB', $colDef);
+                    $colDef = preg_replace('/\bREAL\b/i', 'DOUBLE', $colDef);
+                    $colDef = preg_replace('/\bNUMERIC\b/i', 'DECIMAL(10,2)', $colDef);
+                    
+                    // Converter AUTOINCREMENT
+                    $colDef = preg_replace('/\bAUTOINCREMENT\b/i', 'AUTO_INCREMENT', $colDef);
+                    
+                    // Converter NOT NULL
+                    $colDef = preg_replace('/\bNOT NULL\b/i', 'NOT NULL', $colDef);
+                    
+                    // Converter DEFAULT
+                    $colDef = preg_replace('/\bDEFAULT\s+(\d+|"[^"]*"|\'[^\']*\')/i', 'DEFAULT $1', $colDef);
+                    
+                    $convertedColumns[] = "`{$colName}` {$colDef}";
+                } else {
+                    // Pode ser uma constraint (PRIMARY KEY, FOREIGN KEY, etc)
+                    $column = preg_replace('/PRIMARY KEY\s*\(([^)]+)\)/i', 'PRIMARY KEY ($1)', $column);
+                    $column = preg_replace('/FOREIGN KEY\s*\(([^)]+)\)/i', 'FOREIGN KEY ($1)', $column);
+                    $convertedColumns[] = $column;
+                }
+            }
+            
+            // Reconstruir CREATE TABLE
+            $sql = "CREATE TABLE `{$tableName}` (\n  " . implode(",\n  ", $convertedColumns) . "\n)";
+        } else {
+            // Fallback: conversão simples
+            $sql = preg_replace('/CREATE TABLE\s+(\w+)/i', 'CREATE TABLE `$1`', $sql);
+            $sql = preg_replace('/\bINTEGER\b/i', 'INT', $sql);
+            $sql = preg_replace('/\bTEXT\b/i', 'TEXT', $sql);
+            $sql = preg_replace('/\bBLOB\b/i', 'BLOB', $sql);
+            $sql = preg_replace('/\bREAL\b/i', 'DOUBLE', $sql);
+            $sql = preg_replace('/\bNUMERIC\b/i', 'DECIMAL(10,2)', $sql);
+            $sql = preg_replace('/\bAUTOINCREMENT\b/i', 'AUTO_INCREMENT', $sql);
+        }
+        
+        // Adicionar ENGINE e CHARSET se não existir
+        if (!preg_match('/ENGINE=/i', $sql)) {
+            $sql = rtrim($sql, ';');
+            $sql .= " ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+        }
+        
+        return $sql;
+    }
+}
+
