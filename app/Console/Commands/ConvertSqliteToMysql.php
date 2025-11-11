@@ -138,7 +138,6 @@ class ConvertSqliteToMysql extends Command
             'failed_jobs' => 1,
             'roles' => 2,
             'permissions' => 2,
-            'categories' => 2,
             'acquirers' => 2,
             'system_settings' => 2,
             
@@ -146,6 +145,7 @@ class ConvertSqliteToMysql extends Command
             'users' => 3,
             
             // Tabelas que dependem de users ou outras tabelas básicas
+            'categories' => 4, // categories depende de users
             'groups' => 4,
             'members' => 4,
             'addresses' => 4,
@@ -156,7 +156,7 @@ class ConvertSqliteToMysql extends Command
             'pix_keys' => 4,
             'withdrawals' => 4,
             'system_images' => 4,
-            'products' => 4, // products depende de categories, mas categories já está na prioridade 2
+            'products' => 5, // products depende de categories e users
             'checkouts' => 5, // checkouts depende de products
             'transactions' => 5, // transactions depende de products e checkouts
             

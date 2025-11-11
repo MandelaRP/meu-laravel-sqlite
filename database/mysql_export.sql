@@ -1,5 +1,5 @@
 -- Exportação de SQLite para MySQL
--- Gerado em: 2025-11-11 16:35:20
+-- Gerado em: 2025-11-11 16:43:08
 -- 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -194,34 +194,6 @@ INSERT INTO `acquirers` (`id`, `name`, `slug`, `description`, `is_active`, `api_
 UNLOCK TABLES;
 
 
--- Estrutura da tabela `categories`
-DROP TABLE IF EXISTS `categories`;
-CREATE TABLE `categories` (
-  `id` VARCHAR(255) NOT NULL,
-  `user_id` INT NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `description` VARCHAR(255),
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` datetime,
-  `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `categories`
-LOCK TABLES `categories` WRITE;
-/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` (`id`, `user_id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
-('019a6978-4261-7297-b408-37f99858b313', 1, 'Eletrônicos', 'Produtos eletrônicos e tecnológicos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-426c-7321-90df-9f945330722a', 1, 'Ebooks', 'Ebooks e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-4283-7288-bd5e-7b71f062085d', 1, 'Vestuário', 'Roupas e acessórios', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-428f-72a9-9bfb-261f62e8ea89', 1, 'Casa e Jardim', 'Produtos para casa e jardinagem', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-4299-7342-a3cc-44ee13a3bc27', 1, 'Esportes', 'Equipamentos e acessórios esportivos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-42a3-727a-b25e-0fb4698c3f11', 1, 'Livros', 'Livros e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40');
-/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
 -- Estrutura da tabela `permissions`
 DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE `permissions` (
@@ -340,7 +312,7 @@ CREATE TABLE `users` (
   `cash_out_percentage` DECIMAL(10,2),
   `cash_out_fixed` DECIMAL(10,2),
   `preferred_acquirer` VARCHAR(255),
-  FOREIGN KEY (`acquirer_id`) REFERENCES `acquirers` (`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`acquirer_id`) REFERENCES `acquirers` (`id`) on delete set null,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -381,6 +353,34 @@ INSERT INTO `addresses` (`id`, `user_id`, `zip_code`, `address`, `number`, `city
 UNLOCK TABLES;
 
 
+-- Estrutura da tabela `categories`
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE `categories` (
+  `id` VARCHAR(255) NOT NULL,
+  `user_id` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime,
+  `updated_at` datetime,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `categories`
+LOCK TABLES `categories` WRITE;
+/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` (`id`, `user_id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
+('019a6978-4261-7297-b408-37f99858b313', 1, 'Eletrônicos', 'Produtos eletrônicos e tecnológicos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-426c-7321-90df-9f945330722a', 1, 'Ebooks', 'Ebooks e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-4283-7288-bd5e-7b71f062085d', 1, 'Vestuário', 'Roupas e acessórios', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-428f-72a9-9bfb-261f62e8ea89', 1, 'Casa e Jardim', 'Produtos para casa e jardinagem', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-4299-7342-a3cc-44ee13a3bc27', 1, 'Esportes', 'Equipamentos e acessórios esportivos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
+('019a6978-42a3-727a-b25e-0fb4698c3f11', 1, 'Livros', 'Livros e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40');
+/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 -- Estrutura da tabela `financial_settings`
 DROP TABLE IF EXISTS `financial_settings`;
 CREATE TABLE `financial_settings` (
@@ -396,7 +396,7 @@ CREATE TABLE `financial_settings` (
   `maximum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT '25',
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -422,7 +422,7 @@ CREATE TABLE `fullpix_sales` (
   `fullpix_response` TEXT,
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
   CHECK (`status` IN ('pending', 'waiting_payment', 'paid', 'refused', 'cancelled', 'refunded', 'expired')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -497,7 +497,7 @@ CREATE TABLE `liberpay_sales` (
   `liberpay_response` TEXT,
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
   CHECK (`status` IN ('pending', 'paid', 'expired', 'cancelled', 'refunded')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -535,8 +535,8 @@ CREATE TABLE `order_bumps` (
   `product_id` VARCHAR(255) NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) on delete cascade on update cascade,
+  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) on delete cascade on update cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -554,7 +554,7 @@ CREATE TABLE `pix_keys` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
   CHECK (`type` IN ('CPF', 'CNPJ', 'EMAIL', 'PHONE', 'EVP')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -566,37 +566,6 @@ INSERT INTO `pix_keys` (`id`, `user_id`, `type`, `key`, `description`, `is_activ
 (1, 6, 'EMAIL', 'agenciapagamentoseguro@gmail.com', 'Banco Inter', 1, '2025-11-09 23:25:39', '2025-11-09 23:25:39'),
 (2, 6, 'EVP', '8637fe7f-b450-4661-a442-ac8903aafe6f', NULL, 1, '2025-11-10 04:42:09', '2025-11-10 04:42:09');
 /*!40000 ALTER TABLE `pix_keys` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
--- Estrutura da tabela `products`
-DROP TABLE IF EXISTS `products`;
-CREATE TABLE `products` (
-  `id` VARCHAR(255) NOT NULL,
-  `user_id` INT NOT NULL,
-  `category_id` VARCHAR(255),
-  `name` VARCHAR(255) NOT NULL,
-  `description` VARCHAR(255),
-  `image` VARCHAR(255),
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  `type` VARCHAR(255) NOT NULL DEFAULT 'DIGITAL',
-  `price` DECIMAL(10,2) NOT NULL,
-  `stock` INT NOT NULL DEFAULT '0',
-  `is_sample` tinyint(1) NOT NULL DEFAULT '0',
-  `created_at` datetime,
-  `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
-  CHECK (`type` IN ('FISICAL', 'DIGITAL')),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dados da tabela `products`
-LOCK TABLES `products` WRITE;
-/*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` (`id`, `user_id`, `category_id`, `name`, `description`, `image`, `status`, `type`, `price`, `stock`, `is_sample`, `created_at`, `updated_at`) VALUES
-('019a701b-95aa-719a-bcf9-4b918108ffa7', 6, NULL, 'Tropa galera', NULL, 'products/fd3SITX75yhRH9IwWwCvDvTJfrlJ2IVjAFw20w26.jpg', 1, 'DIGITAL', 10.5, 0, 0, '2025-11-10 23:30:47', '2025-11-10 23:30:47');
-/*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
@@ -640,7 +609,7 @@ CREATE TABLE `withdrawals` (
   `created_at` datetime,
   `updated_at` datetime,
   `gateway_fee` DECIMAL(10,2) NOT NULL DEFAULT '0',
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
   CHECK (`pix_type` IN ('CPF', 'CNPJ', 'EMAIL', 'PHONE', 'EVP')),
   CHECK (`status` IN ('pending', 'approved', 'processing', 'done', 'done_manual', 'failed', 'refused', 'cancelled')),
   PRIMARY KEY (`id`)
@@ -699,7 +668,7 @@ CREATE TABLE `checkouts` (
   `order_bump_enabled` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete no action on update no action,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -763,6 +732,37 @@ INSERT INTO `permission_user` (`user_id`, `permission_id`) VALUES
 UNLOCK TABLES;
 
 
+-- Estrutura da tabela `products`
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE `products` (
+  `id` VARCHAR(255) NOT NULL,
+  `user_id` INT NOT NULL,
+  `category_id` VARCHAR(255),
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `image` VARCHAR(255),
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `type` VARCHAR(255) NOT NULL DEFAULT 'DIGITAL',
+  `price` DECIMAL(10,2) NOT NULL,
+  `stock` INT NOT NULL DEFAULT '0',
+  `is_sample` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` datetime,
+  `updated_at` datetime,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
+  CHECK (`type` IN ('FISICAL', 'DIGITAL')),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dados da tabela `products`
+LOCK TABLES `products` WRITE;
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` (`id`, `user_id`, `category_id`, `name`, `description`, `image`, `status`, `type`, `price`, `stock`, `is_sample`, `created_at`, `updated_at`) VALUES
+('019a701b-95aa-719a-bcf9-4b918108ffa7', 6, NULL, 'Tropa galera', NULL, 'products/fd3SITX75yhRH9IwWwCvDvTJfrlJ2IVjAFw20w26.jpg', 1, 'DIGITAL', 10.5, 0, 0, '2025-11-10 23:30:47', '2025-11-10 23:30:47');
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 -- Estrutura da tabela `role_user`
 DROP TABLE IF EXISTS `role_user`;
 CREATE TABLE `role_user` (
@@ -800,7 +800,7 @@ CREATE TABLE `transactions` (
   `updated_at` datetime,
   `is_sample` tinyint(1) NOT NULL DEFAULT '0',
   `product_id` VARCHAR(255),
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade on update no action,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
