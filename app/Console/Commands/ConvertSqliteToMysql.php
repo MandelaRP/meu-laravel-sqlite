@@ -224,6 +224,21 @@ class ConvertSqliteToMysql extends Command
                 $column = trim($column);
                 if (empty($column)) continue;
                 
+                // Primeiro, tratar PRIMARY KEY antes de processar colunas
+                if (preg_match('/\bprimary\s+key\s*\(/i', $column)) {
+                    // PRIMARY KEY (em qualquer case) - normalizar
+                    $column = preg_replace_callback('/\bprimary\s+key\s*\(([^)]+)\)/i', function($m) {
+                        $cols = preg_split('/\s*,\s*/', trim($m[1], ' "\''));
+                        $colsFormatted = array_map(function($col) {
+                            $col = trim($col, ' "\'');
+                            return "`{$col}`";
+                        }, $cols);
+                        return "PRIMARY KEY (" . implode(', ', $colsFormatted) . ")";
+                    }, $column);
+                    $convertedColumns[] = $column;
+                    continue;
+                }
+                
                 // Remover aspas duplas e simples dos nomes
                 $column = preg_replace('/["\'](\w+)["\']/', '$1', $column);
                 
@@ -252,9 +267,9 @@ class ConvertSqliteToMysql extends Command
                     $colDef = preg_replace('/\bnot null\b/i', 'NOT NULL', $colDef);
                     $colDef = preg_replace('/\bnull\b/i', 'NULL', $colDef);
                     
-                    // Normalizar PRIMARY KEY
-                    if (preg_match('/\bprimary key\b/i', $colDef)) {
-                        $colDef = preg_replace('/\bprimary key\b/i', 'PRIMARY KEY', $colDef);
+                    // Remover PRIMARY KEY da definição da coluna (será adicionado como constraint separada)
+                    if (preg_match('/\bprimary\s+key\b/i', $colDef)) {
+                        $colDef = preg_replace('/\s*\bprimary\s+key\b/i', '', $colDef);
                         $primaryKeys[] = $colName;
                     }
                     
@@ -265,12 +280,15 @@ class ConvertSqliteToMysql extends Command
                     
                     $convertedColumns[] = "`{$colName}` {$colDef}";
                 } elseif (preg_match('/PRIMARY KEY\s*\(([^)]+)\)/i', $column, $pkMatches)) {
-                    // PRIMARY KEY como constraint separada
+                    // PRIMARY KEY como constraint separada (já em maiúsculas)
                     $pkCols = preg_split('/\s*,\s*/', trim($pkMatches[1], ' "\''));
+                    $pkColsFormatted = [];
                     foreach ($pkCols as $pkCol) {
                         $pkCol = trim($pkCol, ' "\'');
                         $primaryKeys[] = $pkCol;
+                        $pkColsFormatted[] = "`{$pkCol}`";
                     }
+                    $convertedColumns[] = "PRIMARY KEY (" . implode(', ', $pkColsFormatted) . ")";
                 } elseif (preg_match('/FOREIGN KEY/i', $column)) {
                     // FOREIGN KEY - converter para sintaxe MySQL
                     $column = preg_replace('/["\'](\w+)["\']/', '`$1`', $column);

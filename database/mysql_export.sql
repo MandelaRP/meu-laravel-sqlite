@@ -1,5 +1,5 @@
 -- Exportação de SQLite para MySQL
--- Gerado em: 2025-11-11 10:22:05
+-- Gerado em: 2025-11-11 10:24:44
 -- 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -14,9 +14,10 @@ SET time_zone = "+00:00";
 -- Estrutura da tabela `migrations`
 DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE `migrations` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `migration` VARCHAR(255) NOT NULL,
-  `batch` INT NOT NULL
+  `batch` INT NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `migrations`
@@ -65,7 +66,7 @@ CREATE TABLE `password_reset_tokens` (
   `email` VARCHAR(255) NOT NULL,
   `token` VARCHAR(255) NOT NULL,
   `created_at` datetime,
-  `primary` key (email)
+  PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `password_reset_tokens`: vazia
@@ -80,7 +81,7 @@ CREATE TABLE `sessions` (
   `user_agent` TEXT,
   `payload` TEXT NOT NULL,
   `last_activity` INT NOT NULL,
-  `primary` key (id)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `sessions`: vazia
@@ -92,7 +93,7 @@ CREATE TABLE `cache` (
   `key` VARCHAR(255) NOT NULL,
   `value` TEXT NOT NULL,
   `expiration` INT NOT NULL,
-  `primary` key (key)
+  PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `cache`: vazia
@@ -104,7 +105,7 @@ CREATE TABLE `cache_locks` (
   `key` VARCHAR(255) NOT NULL,
   `owner` VARCHAR(255) NOT NULL,
   `expiration` INT NOT NULL,
-  `primary` key (key)
+  PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `cache_locks`: vazia
@@ -113,13 +114,14 @@ CREATE TABLE `cache_locks` (
 -- Estrutura da tabela `jobs`
 DROP TABLE IF EXISTS `jobs`;
 CREATE TABLE `jobs` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `queue` VARCHAR(255) NOT NULL,
   `payload` TEXT NOT NULL,
   `attempts` INT NOT NULL,
   `reserved_at` INT,
   `available_at` INT NOT NULL,
-  `created_at` INT NOT NULL
+  `created_at` INT NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `jobs`: vazia
@@ -138,7 +140,7 @@ CREATE TABLE `job_batches` (
   `cancelled_at` INT,
   `created_at` INT NOT NULL,
   `finished_at` INT,
-  `primary` key (id)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `job_batches`: vazia
@@ -147,13 +149,14 @@ CREATE TABLE `job_batches` (
 -- Estrutura da tabela `failed_jobs`
 DROP TABLE IF EXISTS `failed_jobs`;
 CREATE TABLE `failed_jobs` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `uuid` VARCHAR(255) NOT NULL,
   `connection` TEXT NOT NULL,
   `queue` TEXT NOT NULL,
   `payload` TEXT NOT NULL,
   `exception` TEXT NOT NULL,
-  `failed_at` datetime NOT NULL DEFAULT 'CURRENT_TIMESTAMP'
+  `failed_at` datetime NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `failed_jobs`: vazia
@@ -169,7 +172,7 @@ CREATE TABLE `groups` (
   `created_at` datetime,
   `updated_at` datetime,
   `foreign` key(user_id) references users(id),
-  `primary` key (id)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `groups`
@@ -186,7 +189,7 @@ UNLOCK TABLES;
 -- Estrutura da tabela `members`
 DROP TABLE IF EXISTS `members`;
 CREATE TABLE `members` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `user_id` INT NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
@@ -197,7 +200,8 @@ CREATE TABLE `members` (
   `alert_channels` TEXT NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id)
+  `foreign` key(user_id) references users(id),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `members`: vazia
@@ -206,10 +210,11 @@ CREATE TABLE `members` (
 -- Estrutura da tabela `roles`
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `created_at` datetime,
-  `updated_at` datetime
+  `updated_at` datetime,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `roles`
@@ -228,10 +233,11 @@ UNLOCK TABLES;
 -- Estrutura da tabela `permissions`
 DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE `permissions` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `created_at` datetime,
-  `updated_at` datetime
+  `updated_at` datetime,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `permissions`
@@ -254,7 +260,7 @@ CREATE TABLE `permission_role` (
   `role_id` INT NOT NULL,
   `foreign` key(permission_id) references permissions(id),
   `foreign` key(role_id) references roles(id),
-  `primary` key (permission_id, role_id)
+  PRIMARY KEY (`permission_id`, `role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `permission_role`: vazia
@@ -267,7 +273,7 @@ CREATE TABLE `role_user` (
   `user_id` INT NOT NULL,
   `foreign` key(role_id) references roles(id),
   `foreign` key(user_id) references users(id),
-  `primary` key (role_id, user_id)
+  PRIMARY KEY (`role_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `role_user`
@@ -287,7 +293,7 @@ CREATE TABLE `permission_user` (
   `permission_id` INT NOT NULL,
   `foreign` key(user_id) references users(id),
   `foreign` key(permission_id) references permissions(id),
-  `primary` key (user_id, permission_id)
+  PRIMARY KEY (`user_id`, `permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `permission_user`
@@ -311,7 +317,7 @@ CREATE TABLE `member_role` (
   `role_id` INT NOT NULL,
   `foreign` key(member_id) references members(id),
   `foreign` key(role_id) references roles(id),
-  `primary` key (member_id, role_id)
+  PRIMARY KEY (`member_id`, `role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `member_role`: vazia
@@ -320,7 +326,7 @@ CREATE TABLE `member_role` (
 -- Estrutura da tabela `addresses`
 DROP TABLE IF EXISTS `addresses`;
 CREATE TABLE `addresses` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `user_id` INT NOT NULL,
   `zip_code` VARCHAR(255) NOT NULL,
   `address` VARCHAR(255) NOT NULL,
@@ -329,7 +335,8 @@ CREATE TABLE `addresses` (
   `state` VARCHAR(255) NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id)
+  `foreign` key(user_id) references users(id),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `addresses`
@@ -345,7 +352,7 @@ UNLOCK TABLES;
 -- Estrutura da tabela `financial_settings`
 DROP TABLE IF EXISTS `financial_settings`;
 CREATE TABLE `financial_settings` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `user_id` INT NOT NULL,
   `cash_in_percentage` DECIMAL(10,2) NOT NULL DEFAULT 5,
   `cash_in_fixed_value` DECIMAL(10,2) NOT NULL DEFAULT 2.5,
@@ -357,7 +364,8 @@ CREATE TABLE `financial_settings` (
   `maximum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT 25,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete cascade
+  `foreign` key(user_id) references users(id) on delete cascade,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `financial_settings`: vazia
@@ -374,7 +382,7 @@ CREATE TABLE `categories` (
   `created_at` datetime,
   `updated_at` datetime,
   `foreign` key(user_id) references users(id) on delete cascade,
-  `primary` key (id)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `categories`
@@ -394,13 +402,14 @@ UNLOCK TABLES;
 -- Estrutura da tabela `order_bumps`
 DROP TABLE IF EXISTS `order_bumps`;
 CREATE TABLE `order_bumps` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `checkout_id` VARCHAR(255) NOT NULL,
   `product_id` VARCHAR(255) NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
   `foreign` key(checkout_id) references checkouts(id) on delete cascade on update cascade,
-  `foreign` key(product_id) references products(id) on delete cascade on update cascade
+  `foreign` key(product_id) references products(id) on delete cascade on update cascade,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `order_bumps`: vazia
@@ -409,7 +418,7 @@ CREATE TABLE `order_bumps` (
 -- Estrutura da tabela `acquirers`
 DROP TABLE IF EXISTS `acquirers`;
 CREATE TABLE `acquirers` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `slug` VARCHAR(255) NOT NULL,
   `description` VARCHAR(255),
@@ -423,7 +432,8 @@ CREATE TABLE `acquirers` (
   `gateway_fee_percentage` DECIMAL(10,2) NOT NULL DEFAULT 2.99,
   `fixed_fee` DECIMAL(10,2) NOT NULL DEFAULT 0,
   `percentage_fee` DECIMAL(10,2) NOT NULL DEFAULT 0,
-  `withdrawal_fee` DECIMAL(10,2) NOT NULL DEFAULT 0
+  `withdrawal_fee` DECIMAL(10,2) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `acquirers`
@@ -439,7 +449,7 @@ UNLOCK TABLES;
 -- Estrutura da tabela `liberpay_sales`
 DROP TABLE IF EXISTS `liberpay_sales`;
 CREATE TABLE `liberpay_sales` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `user_id` INT NOT NULL,
   `liberpay_sale_id` VARCHAR(255) NOT NULL,
   `reference_code` VARCHAR(255),
@@ -455,7 +465,8 @@ CREATE TABLE `liberpay_sales` (
   `liberpay_response` TEXT,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete cascade
+  `foreign` key(user_id) references users(id) on delete cascade,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `liberpay_sales`: vazia
@@ -464,7 +475,7 @@ CREATE TABLE `liberpay_sales` (
 -- Estrutura da tabela `users`
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `avatar` VARCHAR(255),
@@ -503,7 +514,8 @@ CREATE TABLE `users` (
   `cash_out_percentage` DECIMAL(10,2),
   `cash_out_fixed` DECIMAL(10,2),
   `preferred_acquirer` VARCHAR(255),
-  `foreign` key(acquirer_id) references acquirers(id) on delete set NULL
+  `foreign` key(acquirer_id) references acquirers(id) on delete set NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `users`
@@ -520,13 +532,14 @@ UNLOCK TABLES;
 -- Estrutura da tabela `system_settings`
 DROP TABLE IF EXISTS `system_settings`;
 CREATE TABLE `system_settings` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `key` VARCHAR(255) NOT NULL,
   `value` TEXT,
   `type` VARCHAR(255) NOT NULL DEFAULT 'string',
   `description` TEXT,
   `created_at` datetime,
-  `updated_at` datetime
+  `updated_at` datetime,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `system_settings`
@@ -549,7 +562,7 @@ UNLOCK TABLES;
 -- Estrutura da tabela `fullpix_sales`
 DROP TABLE IF EXISTS `fullpix_sales`;
 CREATE TABLE `fullpix_sales` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `user_id` INT NOT NULL,
   `fullpix_transaction_id` VARCHAR(255) NOT NULL,
   `reference_code` VARCHAR(255),
@@ -565,7 +578,8 @@ CREATE TABLE `fullpix_sales` (
   `fullpix_response` TEXT,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete cascade
+  `foreign` key(user_id) references users(id) on delete cascade,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `fullpix_sales`
@@ -598,7 +612,7 @@ UNLOCK TABLES;
 -- Estrutura da tabela `pix_keys`
 DROP TABLE IF EXISTS `pix_keys`;
 CREATE TABLE `pix_keys` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `user_id` INT NOT NULL,
   `type` VARCHAR(255) check (type in (CPF, CNPJ, EMAIL, PHONE, EVP)) NOT NULL DEFAULT 'CPF',
   `key` VARCHAR(255) NOT NULL,
@@ -606,7 +620,8 @@ CREATE TABLE `pix_keys` (
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` datetime,
   `updated_at` datetime,
-  `foreign` key(user_id) references users(id) on delete cascade
+  `foreign` key(user_id) references users(id) on delete cascade,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `pix_keys`
@@ -622,7 +637,7 @@ UNLOCK TABLES;
 -- Estrutura da tabela `withdrawals`
 DROP TABLE IF EXISTS `withdrawals`;
 CREATE TABLE `withdrawals` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `user_id` INT NOT NULL,
   `fullpix_withdrawal_id` VARCHAR(255),
   `pix_type` VARCHAR(255) check (pix_type in (CPF, CNPJ, EMAIL, PHONE, EVP)) NOT NULL DEFAULT 'CPF',
@@ -639,7 +654,8 @@ CREATE TABLE `withdrawals` (
   `created_at` datetime,
   `updated_at` datetime,
   `gateway_fee` DECIMAL(10,2) NOT NULL DEFAULT 0,
-  `foreign` key(user_id) references users(id) on delete cascade
+  `foreign` key(user_id) references users(id) on delete cascade,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `withdrawals`
@@ -659,11 +675,12 @@ UNLOCK TABLES;
 -- Estrutura da tabela `system_images`
 DROP TABLE IF EXISTS `system_images`;
 CREATE TABLE `system_images` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `id` INT AUTO_INCREMENT,
   `key` TEXT UNIQUE NOT NULL,
   `value` TEXT NOT NULL,
   `created_at` DATETIME DEFAULT 'CURRENT_TIMESTAMP',
-  `updated_at` DATETIME DEFAULT 'CURRENT_TIMESTAMP'
+  `updated_at` DATETIME DEFAULT 'CURRENT_TIMESTAMP',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `system_images`
@@ -715,7 +732,7 @@ CREATE TABLE `checkouts` (
   `created_at` datetime,
   `updated_at` datetime,
   `foreign` key(user_id) references users(id) on delete no action on update no action,
-  `primary` key (id)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `checkouts`
@@ -731,7 +748,7 @@ UNLOCK TABLES;
 -- Estrutura da tabela `transactions`
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE `transactions` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `id` INT AUTO_INCREMENT NOT NULL,
   `user_id` INT NOT NULL,
   `invoice` VARCHAR(255) NOT NULL,
   `payment_status` VARCHAR(255) NOT NULL DEFAULT '(Pending)',
@@ -745,7 +762,8 @@ CREATE TABLE `transactions` (
   `updated_at` datetime,
   `is_sample` tinyint(1) NOT NULL DEFAULT '(0)',
   `product_id` VARCHAR(255),
-  `foreign` key(user_id) references users(id) on delete cascade on update no action
+  `foreign` key(user_id) references users(id) on delete cascade on update no action,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `transactions`
@@ -782,7 +800,7 @@ CREATE TABLE `products` (
   `updated_at` datetime,
   `foreign` key(user_id) references users(id),
   `foreign` key(category_id) references categories(id),
-  `primary` key (id)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `products`
