@@ -1,0 +1,72 @@
+╔══════════════════════════════════════════════════════════════╗
+║          🚀 LUCKPAY - PRONTO PARA UPLOAD                    ║
+║                                                              ║
+║  Tudo está configurado! Siga os passos abaixo:              ║
+╚══════════════════════════════════════════════════════════════╝
+
+📋 PASSOS PARA UPLOAD:
+
+1️⃣ PREPARAR (opcional, mas recomendado):
+   Execute: PREPARAR_UPLOAD.bat (Windows) ou PREPARAR_UPLOAD.sh (Linux)
+
+2️⃣ FAZER UPLOAD:
+   ✅ Faça upload de TODA a pasta do projeto para o servidor
+   ✅ Não precisa copiar arquivos manualmente
+   ✅ O index.php e .htaccess já estão na raiz!
+
+3️⃣ CONFIGURAR .env NO SERVIDOR:
+   Edite o arquivo .env e configure:
+   
+   APP_URL=https://auraspay.online
+   DB_CONNECTION=mysql
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_DATABASE=treswebc_gateway
+   DB_USERNAME=treswebc_gateway
+   DB_PASSWORD=MandelaRP123@
+
+4️⃣ IMPORTAR BANCO DE DADOS:
+   - Acesse phpMyAdmin
+   - Selecione o banco: treswebc_gateway
+   - Importe o arquivo: database/mysql_export.sql
+
+5️⃣ TESTAR:
+   Acesse: https://auraspay.online
+
+═══════════════════════════════════════════════════════════════
+
+📁 ESTRUTURA NO SERVIDOR (deve ficar assim):
+
+/
+├── index.php          ✅ Já está pronto!
+├── .htaccess          ✅ Já está pronto!
+├── app/
+├── bootstrap/
+├── config/
+├── database/
+│   └── mysql_export.sql
+├── public/
+│   └── build/
+├── resources/
+├── routes/
+├── storage/
+├── vendor/
+└── .env               ⚠️ Configure este arquivo!
+
+═══════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANTE:
+- Faça upload de TODOS os arquivos (incluindo vendor/)
+- O index.php detecta automaticamente o caminho
+- Não precisa criar pastas separadas
+- Não precisa copiar arquivos manualmente
+
+═══════════════════════════════════════════════════════════════
+
+📚 DOCUMENTAÇÃO COMPLETA:
+- INSTRUCOES_UPLOAD.md (instruções detalhadas)
+- docs/HOSPEDAGEM_COMPARTILHADA.md (guia completo)
+- SOLUCAO_404.md (solução de problemas)
+
+═══════════════════════════════════════════════════════════════
+
