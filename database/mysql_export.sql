@@ -204,7 +204,7 @@ CREATE TABLE `categories` (
   `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -340,7 +340,7 @@ CREATE TABLE `users` (
   `cash_out_percentage` DECIMAL(10,2),
   `cash_out_fixed` DECIMAL(10,2),
   `preferred_acquirer` VARCHAR(255),
-  FOREIGN KEY (`acquirer_id`) REFERENCES `acquirers` (`id`) on delete set null,
+  FOREIGN KEY (`acquirer_id`) REFERENCES `acquirers` (`id`) ON DELETE set null,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -396,7 +396,7 @@ CREATE TABLE `financial_settings` (
   `maximum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT '25',
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -422,7 +422,7 @@ CREATE TABLE `fullpix_sales` (
   `fullpix_response` TEXT,
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE cascade,
   CHECK (`status` IN ('pending', 'waiting_payment', 'paid', 'refused', 'cancelled', 'refunded', 'expired')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -497,7 +497,7 @@ CREATE TABLE `liberpay_sales` (
   `liberpay_response` TEXT,
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE cascade,
   CHECK (`status` IN ('pending', 'paid', 'expired', 'cancelled', 'refunded')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -535,8 +535,8 @@ CREATE TABLE `order_bumps` (
   `product_id` VARCHAR(255) NOT NULL,
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) on delete cascade on update cascade,
-  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) on delete cascade on update cascade,
+  FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) ON DELETE cascade ON UPDATE cascade,
+  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE cascade ON UPDATE cascade,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -554,7 +554,7 @@ CREATE TABLE `pix_keys` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE cascade,
   CHECK (`type` IN ('CPF', 'CNPJ', 'EMAIL', 'PHONE', 'EVP')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -640,7 +640,7 @@ CREATE TABLE `withdrawals` (
   `created_at` datetime,
   `updated_at` datetime,
   `gateway_fee` DECIMAL(10,2) NOT NULL DEFAULT '0',
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE cascade,
   CHECK (`pix_type` IN ('CPF', 'CNPJ', 'EMAIL', 'PHONE', 'EVP')),
   CHECK (`status` IN ('pending', 'approved', 'processing', 'done', 'done_manual', 'failed', 'refused', 'cancelled')),
   PRIMARY KEY (`id`)
@@ -699,7 +699,7 @@ CREATE TABLE `checkouts` (
   `order_bump_enabled` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime,
   `updated_at` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete no action on update no action,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE no action ON UPDATE no action,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -800,7 +800,7 @@ CREATE TABLE `transactions` (
   `updated_at` datetime,
   `is_sample` tinyint(1) NOT NULL DEFAULT '0',
   `product_id` VARCHAR(255),
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) on delete cascade on update no action,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE cascade ON UPDATE no action,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
