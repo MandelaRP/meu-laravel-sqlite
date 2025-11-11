@@ -1,5 +1,5 @@
 -- Exportação de SQLite para MySQL
--- Gerado em: 2025-11-11 10:03:48
+-- Gerado em: 2025-11-11 10:22:05
 -- 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -13,7 +13,11 @@ SET time_zone = "+00:00";
 
 -- Estrutura da tabela `migrations`
 DROP TABLE IF EXISTS `migrations`;
-CREATE TABLE "migrations" ("id" INT primary key AUTO_INCREMENT not null, "migration" varchar not null, "batch" INT not null) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `migrations` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `migration` VARCHAR(255) NOT NULL,
+  `batch` INT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `migrations`
 LOCK TABLES `migrations` WRITE;
@@ -57,56 +61,116 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `password_reset_tokens`
 DROP TABLE IF EXISTS `password_reset_tokens`;
-CREATE TABLE "password_reset_tokens" ("email" varchar not null, "token" varchar not null, "created_at" datetime, primary key ("email")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `password_reset_tokens` (
+  `email` VARCHAR(255) NOT NULL,
+  `token` VARCHAR(255) NOT NULL,
+  `created_at` datetime,
+  `primary` key (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `password_reset_tokens`: vazia
 
 
 -- Estrutura da tabela `sessions`
 DROP TABLE IF EXISTS `sessions`;
-CREATE TABLE "sessions" ("id" varchar not null, "user_id" INT, "ip_address" varchar, "user_agent" TEXT, "payload" TEXT not null, "last_activity" INT not null, primary key ("id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `sessions` (
+  `id` VARCHAR(255) NOT NULL,
+  `user_id` INT,
+  `ip_address` VARCHAR(255),
+  `user_agent` TEXT,
+  `payload` TEXT NOT NULL,
+  `last_activity` INT NOT NULL,
+  `primary` key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `sessions`: vazia
 
 
 -- Estrutura da tabela `cache`
 DROP TABLE IF EXISTS `cache`;
-CREATE TABLE "cache" ("key" varchar not null, "value" TEXT not null, "expiration" INT not null, primary key ("key")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `cache` (
+  `key` VARCHAR(255) NOT NULL,
+  `value` TEXT NOT NULL,
+  `expiration` INT NOT NULL,
+  `primary` key (key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `cache`: vazia
 
 
 -- Estrutura da tabela `cache_locks`
 DROP TABLE IF EXISTS `cache_locks`;
-CREATE TABLE "cache_locks" ("key" varchar not null, "owner" varchar not null, "expiration" INT not null, primary key ("key")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `cache_locks` (
+  `key` VARCHAR(255) NOT NULL,
+  `owner` VARCHAR(255) NOT NULL,
+  `expiration` INT NOT NULL,
+  `primary` key (key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `cache_locks`: vazia
 
 
 -- Estrutura da tabela `jobs`
 DROP TABLE IF EXISTS `jobs`;
-CREATE TABLE "jobs" ("id" INT primary key AUTO_INCREMENT not null, "queue" varchar not null, "payload" TEXT not null, "attempts" INT not null, "reserved_at" INT, "available_at" INT not null, "created_at" INT not null) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `jobs` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `queue` VARCHAR(255) NOT NULL,
+  `payload` TEXT NOT NULL,
+  `attempts` INT NOT NULL,
+  `reserved_at` INT,
+  `available_at` INT NOT NULL,
+  `created_at` INT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `jobs`: vazia
 
 
 -- Estrutura da tabela `job_batches`
 DROP TABLE IF EXISTS `job_batches`;
-CREATE TABLE "job_batches" ("id" varchar not null, "name" varchar not null, "total_jobs" INT not null, "pending_jobs" INT not null, "failed_jobs" INT not null, "failed_job_ids" TEXT not null, "options" TEXT, "cancelled_at" INT, "created_at" INT not null, "finished_at" INT, primary key ("id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `job_batches` (
+  `id` VARCHAR(255) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `total_jobs` INT NOT NULL,
+  `pending_jobs` INT NOT NULL,
+  `failed_jobs` INT NOT NULL,
+  `failed_job_ids` TEXT NOT NULL,
+  `options` TEXT,
+  `cancelled_at` INT,
+  `created_at` INT NOT NULL,
+  `finished_at` INT,
+  `primary` key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `job_batches`: vazia
 
 
 -- Estrutura da tabela `failed_jobs`
 DROP TABLE IF EXISTS `failed_jobs`;
-CREATE TABLE "failed_jobs" ("id" INT primary key AUTO_INCREMENT not null, "uuid" varchar not null, "connection" TEXT not null, "queue" TEXT not null, "payload" TEXT not null, "exception" TEXT not null, "failed_at" datetime not null default CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `failed_jobs` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `uuid` VARCHAR(255) NOT NULL,
+  `connection` TEXT NOT NULL,
+  `queue` TEXT NOT NULL,
+  `payload` TEXT NOT NULL,
+  `exception` TEXT NOT NULL,
+  `failed_at` datetime NOT NULL DEFAULT 'CURRENT_TIMESTAMP'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `failed_jobs`: vazia
 
 
 -- Estrutura da tabela `groups`
 DROP TABLE IF EXISTS `groups`;
-CREATE TABLE "groups" ("id" varchar not null, "user_id" INT not null, "name" varchar not null, "description" varchar, "created_at" datetime, "updated_at" datetime, foreign key("user_id") references "users"("id"), primary key ("id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `groups` (
+  `id` VARCHAR(255) NOT NULL,
+  `user_id` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id),
+  `primary` key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `groups`
 LOCK TABLES `groups` WRITE;
@@ -121,14 +185,32 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `members`
 DROP TABLE IF EXISTS `members`;
-CREATE TABLE "members" ("id" INT primary key AUTO_INCREMENT not null, "user_id" INT not null, "name" varchar not null, "email" varchar not null, "phone" varchar not null, "alert_type" varchar check ("alert_type" in ('error', 'warning', 'info', 'debug', 'critical', 'success', 'unknown', 'fatal', 'notice', 'alert', 'emergency')), "notifications" tinyint(1) not null default '1', "is_active" tinyint(1) not null default '1', "alert_channels" TEXT not null, "created_at" datetime, "updated_at" datetime, foreign key("user_id") references "users"("id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `members` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `phone` VARCHAR(255) NOT NULL,
+  `alert_type` VARCHAR(255) check (alert_type in (error, warning, info, debug, critical, success, unknown, fatal, notice, alert, emergency)),
+  `notifications` tinyint(1) NOT NULL DEFAULT 1,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `alert_channels` TEXT NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `members`: vazia
 
 
 -- Estrutura da tabela `roles`
 DROP TABLE IF EXISTS `roles`;
-CREATE TABLE "roles" ("id" INT primary key AUTO_INCREMENT not null, "name" varchar not null, "created_at" datetime, "updated_at" datetime) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `roles` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `roles`
 LOCK TABLES `roles` WRITE;
@@ -145,7 +227,12 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `permissions`
 DROP TABLE IF EXISTS `permissions`;
-CREATE TABLE "permissions" ("id" INT primary key AUTO_INCREMENT not null, "name" varchar not null, "created_at" datetime, "updated_at" datetime) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `permissions` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `permissions`
 LOCK TABLES `permissions` WRITE;
@@ -162,14 +249,26 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `permission_role`
 DROP TABLE IF EXISTS `permission_role`;
-CREATE TABLE "permission_role" ("permission_id" INT not null, "role_id" INT not null, foreign key("permission_id") references "permissions"("id"), foreign key("role_id") references "roles"("id"), primary key ("permission_id", "role_id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `permission_role` (
+  `permission_id` INT NOT NULL,
+  `role_id` INT NOT NULL,
+  `foreign` key(permission_id) references permissions(id),
+  `foreign` key(role_id) references roles(id),
+  `primary` key (permission_id, role_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `permission_role`: vazia
 
 
 -- Estrutura da tabela `role_user`
 DROP TABLE IF EXISTS `role_user`;
-CREATE TABLE "role_user" ("role_id" INT not null, "user_id" INT not null, foreign key("role_id") references "roles"("id"), foreign key("user_id") references "users"("id"), primary key ("role_id", "user_id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `role_user` (
+  `role_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `foreign` key(role_id) references roles(id),
+  `foreign` key(user_id) references users(id),
+  `primary` key (role_id, user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `role_user`
 LOCK TABLES `role_user` WRITE;
@@ -183,7 +282,13 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `permission_user`
 DROP TABLE IF EXISTS `permission_user`;
-CREATE TABLE "permission_user" ("user_id" INT not null, "permission_id" INT not null, foreign key("user_id") references "users"("id"), foreign key("permission_id") references "permissions"("id"), primary key ("user_id", "permission_id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `permission_user` (
+  `user_id` INT NOT NULL,
+  `permission_id` INT NOT NULL,
+  `foreign` key(user_id) references users(id),
+  `foreign` key(permission_id) references permissions(id),
+  `primary` key (user_id, permission_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `permission_user`
 LOCK TABLES `permission_user` WRITE;
@@ -201,14 +306,31 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `member_role`
 DROP TABLE IF EXISTS `member_role`;
-CREATE TABLE "member_role" ("member_id" INT not null, "role_id" INT not null, foreign key("member_id") references "members"("id"), foreign key("role_id") references "roles"("id"), primary key ("member_id", "role_id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `member_role` (
+  `member_id` INT NOT NULL,
+  `role_id` INT NOT NULL,
+  `foreign` key(member_id) references members(id),
+  `foreign` key(role_id) references roles(id),
+  `primary` key (member_id, role_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `member_role`: vazia
 
 
 -- Estrutura da tabela `addresses`
 DROP TABLE IF EXISTS `addresses`;
-CREATE TABLE "addresses" ("id" INT primary key AUTO_INCREMENT not null, "user_id" INT not null, "zip_code" varchar not null, "address" varchar not null, "number" varchar not null, "city" varchar not null, "state" varchar not null, "created_at" datetime, "updated_at" datetime, foreign key("user_id") references "users"("id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `addresses` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `zip_code` VARCHAR(255) NOT NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `number` VARCHAR(255) NOT NULL,
+  `city` VARCHAR(255) NOT NULL,
+  `state` VARCHAR(255) NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `addresses`
 LOCK TABLES `addresses` WRITE;
@@ -222,14 +344,38 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `financial_settings`
 DROP TABLE IF EXISTS `financial_settings`;
-CREATE TABLE "financial_settings" ("id" INT primary key AUTO_INCREMENT not null, "user_id" INT not null, "cash_in_percentage" DECIMAL(10,2) not null default '5', "cash_in_fixed_value" DECIMAL(10,2) not null default '2.5', "cash_out_percentage" DECIMAL(10,2) not null default '3.5', "cash_out_fixed_value" DECIMAL(10,2) not null default '1.8', "minimum_cash_in_value" DECIMAL(10,2) not null default '10', "maximum_cash_in_value" DECIMAL(10,2) not null default '50', "minimum_cash_out_value" DECIMAL(10,2) not null default '5', "maximum_cash_out_value" DECIMAL(10,2) not null default '25', "created_at" datetime, "updated_at" datetime, foreign key("user_id") references "users"("id") on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `financial_settings` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `cash_in_percentage` DECIMAL(10,2) NOT NULL DEFAULT 5,
+  `cash_in_fixed_value` DECIMAL(10,2) NOT NULL DEFAULT 2.5,
+  `cash_out_percentage` DECIMAL(10,2) NOT NULL DEFAULT 3.5,
+  `cash_out_fixed_value` DECIMAL(10,2) NOT NULL DEFAULT 1.8,
+  `minimum_cash_in_value` DECIMAL(10,2) NOT NULL DEFAULT 10,
+  `maximum_cash_in_value` DECIMAL(10,2) NOT NULL DEFAULT 50,
+  `minimum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT 5,
+  `maximum_cash_out_value` DECIMAL(10,2) NOT NULL DEFAULT 25,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id) on delete cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `financial_settings`: vazia
 
 
 -- Estrutura da tabela `categories`
 DROP TABLE IF EXISTS `categories`;
-CREATE TABLE "categories" ("id" varchar not null, "user_id" INT not null, "name" varchar not null, "description" varchar, "status" tinyint(1) not null default '1', "created_at" datetime, "updated_at" datetime, foreign key("user_id") references "users"("id") on delete cascade, primary key ("id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `categories` (
+  `id` VARCHAR(255) NOT NULL,
+  `user_id` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id) on delete cascade,
+  `primary` key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `categories`
 LOCK TABLES `categories` WRITE;
@@ -247,14 +393,38 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `order_bumps`
 DROP TABLE IF EXISTS `order_bumps`;
-CREATE TABLE "order_bumps" ("id" INT primary key AUTO_INCREMENT not null, "checkout_id" varchar not null, "product_id" varchar not null, "created_at" datetime, "updated_at" datetime, foreign key("checkout_id") references "checkouts"("id") on delete cascade on update cascade, foreign key("product_id") references "products"("id") on delete cascade on update cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `order_bumps` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `checkout_id` VARCHAR(255) NOT NULL,
+  `product_id` VARCHAR(255) NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(checkout_id) references checkouts(id) on delete cascade on update cascade,
+  `foreign` key(product_id) references products(id) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `order_bumps`: vazia
 
 
 -- Estrutura da tabela `acquirers`
 DROP TABLE IF EXISTS `acquirers`;
-CREATE TABLE "acquirers" ("id" INT primary key AUTO_INCREMENT not null, "name" varchar not null, "slug" varchar not null, "description" varchar, "is_active" tinyint(1) not null default '0', "api_status" varchar check ("api_status" in ('online', 'offline', 'error', 'checking')) not null default 'offline', "credentials" TEXT, "settings" TEXT, "logo_url" varchar, "created_at" datetime, "updated_at" datetime, "gateway_fee_percentage" DECIMAL(10,2) not null default '2.99', "fixed_fee" DECIMAL(10,2) not null default '0', "percentage_fee" DECIMAL(10,2) not null default '0', "withdrawal_fee" DECIMAL(10,2) not null default '0') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `acquirers` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `slug` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `is_active` tinyint(1) NOT NULL DEFAULT 0,
+  `api_status` VARCHAR(255) check (api_status in (online, offline, error, checking)) NOT NULL DEFAULT 'offline',
+  `credentials` TEXT,
+  `settings` TEXT,
+  `logo_url` VARCHAR(255),
+  `created_at` datetime,
+  `updated_at` datetime,
+  `gateway_fee_percentage` DECIMAL(10,2) NOT NULL DEFAULT 2.99,
+  `fixed_fee` DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `percentage_fee` DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `withdrawal_fee` DECIMAL(10,2) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `acquirers`
 LOCK TABLES `acquirers` WRITE;
@@ -268,14 +438,73 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `liberpay_sales`
 DROP TABLE IF EXISTS `liberpay_sales`;
-CREATE TABLE "liberpay_sales" ("id" INT primary key AUTO_INCREMENT not null, "user_id" INT not null, "liberpay_sale_id" varchar not null, "reference_code" varchar, "external_reference" varchar, "amount" DECIMAL(10,2) not null, "currency" varchar not null default 'BRL', "status" varchar check ("status" in ('pending', 'paid', 'expired', 'cancelled', 'refunded')) not null default 'pending', "pix_qr_code" TEXT, "pix_qr_code_image" TEXT, "expires_at" datetime, "paid_at" datetime, "metadata" TEXT, "liberpay_response" TEXT, "created_at" datetime, "updated_at" datetime, foreign key("user_id") references "users"("id") on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `liberpay_sales` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `liberpay_sale_id` VARCHAR(255) NOT NULL,
+  `reference_code` VARCHAR(255),
+  `external_reference` VARCHAR(255),
+  `amount` DECIMAL(10,2) NOT NULL,
+  `currency` VARCHAR(255) NOT NULL DEFAULT 'BRL',
+  `status` VARCHAR(255) check (status in (pending, paid, expired, cancelled, refunded)) NOT NULL DEFAULT 'pending',
+  `pix_qr_code` TEXT,
+  `pix_qr_code_image` TEXT,
+  `expires_at` datetime,
+  `paid_at` datetime,
+  `metadata` TEXT,
+  `liberpay_response` TEXT,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id) on delete cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `liberpay_sales`: vazia
 
 
 -- Estrutura da tabela `users`
 DROP TABLE IF EXISTS `users`;
-CREATE TABLE "users" ("id" INT primary key AUTO_INCREMENT not null, "name" varchar not null, "email" varchar not null, "avatar" varchar, "email_verified_at" datetime, "password" varchar not null, "phone" varchar, "balance" DECIMAL(10,2) not null default ('0'), "volume_transacionado" DECIMAL(10,2) not null default ('0'), "approved_deposits" DECIMAL(10,2) not null default ('0'), "approved_deposits_net" DECIMAL(10,2) not null default ('0'), "profit_for_platform" DECIMAL(10,2) not null default ('0'), "value_paid_in_taxes" DECIMAL(10,2) not null default ('0'), "withdraw_amount" DECIMAL(10,2) not null default ('0'), "deposit_amount" DECIMAL(10,2) not null default ('0'), "average_monthly_income" DECIMAL(10,2) not null default ('0'), "person_type" varchar, "full_name" varchar, "document" varchar, "average_revenue" varchar, "average_ticket" varchar, "products" varchar, "social_reason" varchar, "social_contract" varchar, "rg_cnh_frente" varchar, "rg_cnh_verso" varchar, "selfie" varchar, "role" varchar not null default ('user'), "status" varchar not null default ('recent_user'), "remember_token" varchar, "created_at" datetime, "updated_at" datetime, "is_sample" tinyint(1) not null default ('0'), "acquirer_id" INT, "cash_in_percentage" DECIMAL(10,2), "cash_in_fixed" DECIMAL(10,2), "cash_out_percentage" DECIMAL(10,2), "cash_out_fixed" DECIMAL(10,2), "preferred_acquirer" varchar, foreign key("acquirer_id") references "acquirers"("id") on delete set null) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `users` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `avatar` VARCHAR(255),
+  `email_verified_at` datetime,
+  `password` VARCHAR(255) NOT NULL,
+  `phone` VARCHAR(255),
+  `balance` DECIMAL(10,2) NOT NULL DEFAULT '(0)',
+  `volume_transacionado` DECIMAL(10,2) NOT NULL DEFAULT '(0)',
+  `approved_deposits` DECIMAL(10,2) NOT NULL DEFAULT '(0)',
+  `approved_deposits_net` DECIMAL(10,2) NOT NULL DEFAULT '(0)',
+  `profit_for_platform` DECIMAL(10,2) NOT NULL DEFAULT '(0)',
+  `value_paid_in_taxes` DECIMAL(10,2) NOT NULL DEFAULT '(0)',
+  `withdraw_amount` DECIMAL(10,2) NOT NULL DEFAULT '(0)',
+  `deposit_amount` DECIMAL(10,2) NOT NULL DEFAULT '(0)',
+  `average_monthly_income` DECIMAL(10,2) NOT NULL DEFAULT '(0)',
+  `person_type` VARCHAR(255),
+  `full_name` VARCHAR(255),
+  `document` VARCHAR(255),
+  `average_revenue` VARCHAR(255),
+  `average_ticket` VARCHAR(255),
+  `products` VARCHAR(255),
+  `social_reason` VARCHAR(255),
+  `social_contract` VARCHAR(255),
+  `rg_cnh_frente` VARCHAR(255),
+  `rg_cnh_verso` VARCHAR(255),
+  `selfie` VARCHAR(255),
+  `role` VARCHAR(255) NOT NULL DEFAULT '(user)',
+  `status` VARCHAR(255) NOT NULL DEFAULT '(recent_user)',
+  `remember_token` VARCHAR(255),
+  `created_at` datetime,
+  `updated_at` datetime,
+  `is_sample` tinyint(1) NOT NULL DEFAULT '(0)',
+  `acquirer_id` INT,
+  `cash_in_percentage` DECIMAL(10,2),
+  `cash_in_fixed` DECIMAL(10,2),
+  `cash_out_percentage` DECIMAL(10,2),
+  `cash_out_fixed` DECIMAL(10,2),
+  `preferred_acquirer` VARCHAR(255),
+  `foreign` key(acquirer_id) references acquirers(id) on delete set NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `users`
 LOCK TABLES `users` WRITE;
@@ -290,7 +519,15 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `system_settings`
 DROP TABLE IF EXISTS `system_settings`;
-CREATE TABLE "system_settings" ("id" INT primary key AUTO_INCREMENT not null, "key" varchar not null, "value" TEXT, "type" varchar not null default 'string', "description" TEXT, "created_at" datetime, "updated_at" datetime) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `system_settings` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `key` VARCHAR(255) NOT NULL,
+  `value` TEXT,
+  `type` VARCHAR(255) NOT NULL DEFAULT 'string',
+  `description` TEXT,
+  `created_at` datetime,
+  `updated_at` datetime
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `system_settings`
 LOCK TABLES `system_settings` WRITE;
@@ -311,7 +548,25 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `fullpix_sales`
 DROP TABLE IF EXISTS `fullpix_sales`;
-CREATE TABLE "fullpix_sales" ("id" INT primary key AUTO_INCREMENT not null, "user_id" INT not null, "fullpix_transaction_id" varchar not null, "reference_code" varchar, "external_reference" varchar, "amount" DECIMAL(10,2) not null, "currency" varchar not null default 'BRL', "status" varchar check ("status" in ('pending', 'waiting_payment', 'paid', 'refused', 'cancelled', 'refunded', 'expired')) not null default 'waiting_payment', "pix_qrcode" TEXT, "pix_qrcode_image" TEXT, "expires_at" datetime, "paid_at" datetime, "metadata" TEXT, "fullpix_response" TEXT, "created_at" datetime, "updated_at" datetime, foreign key("user_id") references "users"("id") on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `fullpix_sales` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `fullpix_transaction_id` VARCHAR(255) NOT NULL,
+  `reference_code` VARCHAR(255),
+  `external_reference` VARCHAR(255),
+  `amount` DECIMAL(10,2) NOT NULL,
+  `currency` VARCHAR(255) NOT NULL DEFAULT 'BRL',
+  `status` VARCHAR(255) check (status in (pending, waiting_payment, paid, refused, cancelled, refunded, expired)) NOT NULL DEFAULT 'waiting_payment',
+  `pix_qrcode` TEXT,
+  `pix_qrcode_image` TEXT,
+  `expires_at` datetime,
+  `paid_at` datetime,
+  `metadata` TEXT,
+  `fullpix_response` TEXT,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id) on delete cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `fullpix_sales`
 LOCK TABLES `fullpix_sales` WRITE;
@@ -342,7 +597,17 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `pix_keys`
 DROP TABLE IF EXISTS `pix_keys`;
-CREATE TABLE "pix_keys" ("id" INT primary key AUTO_INCREMENT not null, "user_id" INT not null, "type" varchar check ("type" in ('CPF', 'CNPJ', 'EMAIL', 'PHONE', 'EVP')) not null default 'CPF', "key" varchar not null, "description" varchar, "is_active" tinyint(1) not null default '1', "created_at" datetime, "updated_at" datetime, foreign key("user_id") references "users"("id") on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `pix_keys` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `type` VARCHAR(255) check (type in (CPF, CNPJ, EMAIL, PHONE, EVP)) NOT NULL DEFAULT 'CPF',
+  `key` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id) on delete cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `pix_keys`
 LOCK TABLES `pix_keys` WRITE;
@@ -356,7 +621,26 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `withdrawals`
 DROP TABLE IF EXISTS `withdrawals`;
-CREATE TABLE "withdrawals" ("id" INT primary key AUTO_INCREMENT not null, "user_id" INT not null, "fullpix_withdrawal_id" varchar, "pix_type" varchar check ("pix_type" in ('CPF', 'CNPJ', 'EMAIL', 'PHONE', 'EVP')) not null default 'CPF', "pix_key" varchar not null, "amount" DECIMAL(10,2) not null, "fee" DECIMAL(10,2) not null default '0', "net_amount" DECIMAL(10,2) not null, "status" varchar check ("status" in ('pending', 'approved', 'processing', 'done', 'done_manual', 'failed', 'refused', 'cancelled')) not null default 'pending', "description" TEXT, "error_message" TEXT, "paid_at" datetime, "fullpix_response" TEXT, "is_sample" tinyint(1) not null default '0', "created_at" datetime, "updated_at" datetime, "gateway_fee" DECIMAL(10,2) not null default '0', foreign key("user_id") references "users"("id") on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `withdrawals` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `fullpix_withdrawal_id` VARCHAR(255),
+  `pix_type` VARCHAR(255) check (pix_type in (CPF, CNPJ, EMAIL, PHONE, EVP)) NOT NULL DEFAULT 'CPF',
+  `pix_key` VARCHAR(255) NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL,
+  `fee` DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `net_amount` DECIMAL(10,2) NOT NULL,
+  `status` VARCHAR(255) check (status in (pending, approved, processing, done, done_manual, failed, refused, cancelled)) NOT NULL DEFAULT 'pending',
+  `description` TEXT,
+  `error_message` TEXT,
+  `paid_at` datetime,
+  `fullpix_response` TEXT,
+  `is_sample` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `gateway_fee` DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `foreign` key(user_id) references users(id) on delete cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `withdrawals`
 LOCK TABLES `withdrawals` WRITE;
@@ -378,8 +662,8 @@ CREATE TABLE `system_images` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
   `key` TEXT UNIQUE NOT NULL,
   `value` TEXT NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+  `created_at` DATETIME DEFAULT 'CURRENT_TIMESTAMP',
+  `updated_at` DATETIME DEFAULT 'CURRENT_TIMESTAMP'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `system_images`
@@ -393,7 +677,46 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `checkouts`
 DROP TABLE IF EXISTS `checkouts`;
-CREATE TABLE "checkouts" ("id" varchar not null, "user_id" INT not null, "product_id" varchar not null, "discount_percentage" INT not null default ('0'), "layout" varchar not null default ('single'), "banner" varchar, "countdown_enabled" tinyint(1) not null default ('1'), "countdown_icon" varchar, "countdown_duration" INT, "countdown_bg_color" varchar not null default ('#dc2626'), "countdown_text_color" varchar not null default ('#ffffff'), "countdown_message" varchar, "countdown_expired" tinyint(1) not null default ('0'), "button_primary_color" varchar not null default ('#10b981'), "button_secondary_color" varchar not null default ('#059669'), "button_hover_primary_color" varchar not null default ('#059669'), "button_hover_secondary_color" varchar not null default ('#047857'), "form_fields_config" TEXT, "form_requirements" TEXT, "background_color" varchar not null default ('#f8fafc'), "text_color" varchar not null default ('#0f172a'), "stepped_form_enabled" tinyint(1) not null default ('0'), "steps" TEXT, "payment_methods" TEXT, "order_bump_bg_color" varchar not null default ('#ffffff'), "order_bump_text_color" varchar not null default ('#0f172a'), "order_bump_border_color" varchar not null default ('#fbbf24'), "order_bump_description" TEXT, "order_bump_cta_text" varchar not null default ('Quero comprar também!'), "order_bump_cta_bg_color" varchar not null default ('#10b981'), "order_bump_cta_text_color" varchar not null default ('#ffffff'), "order_bump_recommended_text" varchar not null default ('(Recomendado)'), "order_bump_recommended_color" varchar not null default ('#fbbf24'), "order_bump_enabled" tinyint(1) not null default ('1'), "created_at" datetime, "updated_at" datetime, foreign key("user_id") references users("id") on delete no action on update no action, primary key ("id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `checkouts` (
+  `id` VARCHAR(255) NOT NULL,
+  `user_id` INT NOT NULL,
+  `product_id` VARCHAR(255) NOT NULL,
+  `discount_percentage` INT NOT NULL DEFAULT '(0)',
+  `layout` VARCHAR(255) NOT NULL DEFAULT '(single)',
+  `banner` VARCHAR(255),
+  `countdown_enabled` tinyint(1) NOT NULL DEFAULT '(1)',
+  `countdown_icon` VARCHAR(255),
+  `countdown_duration` INT,
+  `countdown_bg_color` VARCHAR(255) NOT NULL DEFAULT '(''#dc2626'),
+  `countdown_text_color` VARCHAR(255) NOT NULL DEFAULT '(''#ffffff'),
+  `countdown_message` VARCHAR(255),
+  `countdown_expired` tinyint(1) NOT NULL DEFAULT '(0)',
+  `button_primary_color` VARCHAR(255) NOT NULL DEFAULT '(''#10b981'),
+  `button_secondary_color` VARCHAR(255) NOT NULL DEFAULT '(''#059669'),
+  `button_hover_primary_color` VARCHAR(255) NOT NULL DEFAULT '(''#059669'),
+  `button_hover_secondary_color` VARCHAR(255) NOT NULL DEFAULT '(''#047857'),
+  `form_fields_config` TEXT,
+  `form_requirements` TEXT,
+  `background_color` VARCHAR(255) NOT NULL DEFAULT '(''#f8fafc'),
+  `text_color` VARCHAR(255) NOT NULL DEFAULT '(''#0f172a'),
+  `stepped_form_enabled` tinyint(1) NOT NULL DEFAULT '(0)',
+  `steps` TEXT,
+  `payment_methods` TEXT,
+  `order_bump_bg_color` VARCHAR(255) NOT NULL DEFAULT '(''#ffffff'),
+  `order_bump_text_color` VARCHAR(255) NOT NULL DEFAULT '(''#0f172a'),
+  `order_bump_border_color` VARCHAR(255) NOT NULL DEFAULT '(''#fbbf24'),
+  `order_bump_description` TEXT,
+  `order_bump_cta_text` VARCHAR(255) NOT NULL DEFAULT '(''Quero comprar também!'),
+  `order_bump_cta_bg_color` VARCHAR(255) NOT NULL DEFAULT '(''#10b981'),
+  `order_bump_cta_text_color` VARCHAR(255) NOT NULL DEFAULT '(''#ffffff'),
+  `order_bump_recommended_text` VARCHAR(255) NOT NULL DEFAULT '(''(Recomendado)'),
+  `order_bump_recommended_color` VARCHAR(255) NOT NULL DEFAULT '(''#fbbf24'),
+  `order_bump_enabled` tinyint(1) NOT NULL DEFAULT '(1)',
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id) on delete no action on update no action,
+  `primary` key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `checkouts`
 LOCK TABLES `checkouts` WRITE;
@@ -407,7 +730,23 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `transactions`
 DROP TABLE IF EXISTS `transactions`;
-CREATE TABLE "transactions" ("id" INT primary key AUTO_INCREMENT not null, "user_id" INT not null, "invoice" varchar not null, "payment_status" varchar not null default ('Pending'), "total_amount" DECIMAL(10,2) not null, "payment_method" varchar not null, "net_deposit" DECIMAL(10,2) not null, "acquirer_ref" varchar, "date" date not null, "fee" DECIMAL(10,2) not null, "created_at" datetime, "updated_at" datetime, "is_sample" tinyint(1) not null default ('0'), "product_id" varchar, foreign key("user_id") references users("id") on delete cascade on update no action) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `transactions` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `user_id` INT NOT NULL,
+  `invoice` VARCHAR(255) NOT NULL,
+  `payment_status` VARCHAR(255) NOT NULL DEFAULT '(Pending)',
+  `total_amount` DECIMAL(10,2) NOT NULL,
+  `payment_method` VARCHAR(255) NOT NULL,
+  `net_deposit` DECIMAL(10,2) NOT NULL,
+  `acquirer_ref` VARCHAR(255),
+  `date` date NOT NULL,
+  `fee` DECIMAL(10,2) NOT NULL,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `is_sample` tinyint(1) NOT NULL DEFAULT '(0)',
+  `product_id` VARCHAR(255),
+  `foreign` key(user_id) references users(id) on delete cascade on update no action
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `transactions`
 LOCK TABLES `transactions` WRITE;
@@ -427,7 +766,24 @@ UNLOCK TABLES;
 
 -- Estrutura da tabela `products`
 DROP TABLE IF EXISTS `products`;
-CREATE TABLE "products" ("id" varchar not null, "user_id" INT not null, "category_id" varchar, "name" varchar not null, "description" varchar, "image" varchar, "status" tinyint(1) not null default '1', "type" varchar check ("type" in ('FISICAL', 'DIGITAL')) not null default 'DIGITAL', "price" DECIMAL(10,2) not null, "stock" INT not null default '0', "is_sample" tinyint(1) not null default '0', "created_at" datetime, "updated_at" datetime, foreign key("user_id") references "users"("id"), foreign key("category_id") references "categories"("id"), primary key ("id")) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `products` (
+  `id` VARCHAR(255) NOT NULL,
+  `user_id` INT NOT NULL,
+  `category_id` VARCHAR(255),
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255),
+  `image` VARCHAR(255),
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `type` VARCHAR(255) check (type in (FISICAL, DIGITAL)) NOT NULL DEFAULT 'DIGITAL',
+  `price` DECIMAL(10,2) NOT NULL,
+  `stock` INT NOT NULL DEFAULT 0,
+  `is_sample` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `foreign` key(user_id) references users(id),
+  `foreign` key(category_id) references categories(id),
+  `primary` key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dados da tabela `products`
 LOCK TABLES `products` WRITE;

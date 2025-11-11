@@ -212,24 +212,34 @@ class ConvertSqliteToMysql extends Command
         $sql = trim($sql);
         
         // Extrair definições de colunas
-        if (preg_match('/CREATE TABLE\s+(?:\w+\s+)?\((.+)\)/is', $sql, $matches)) {
+        if (preg_match('/CREATE TABLE\s+(?:["\']?\w+["\']?\s+)?\((.+)\)/is', $sql, $matches)) {
             $columnsDef = $matches[1];
             
             // Converter cada definição de coluna
             $columns = preg_split('/,\s*(?![^()]*\))/', $columnsDef);
             $convertedColumns = [];
+            $primaryKeys = [];
             
             foreach ($columns as $column) {
                 $column = trim($column);
                 if (empty($column)) continue;
                 
-                // Extrair nome da coluna
-                if (preg_match('/^(["\']?)(\w+)\1\s+(.+)$/i', $column, $colMatches)) {
-                    $colName = $colMatches[2];
-                    $colDef = $colMatches[3];
+                // Remover aspas duplas e simples dos nomes
+                $column = preg_replace('/["\'](\w+)["\']/', '$1', $column);
+                
+                // Extrair nome da coluna e definição
+                if (preg_match('/^(\w+)\s+(.+)$/i', $column, $colMatches)) {
+                    $colName = trim($colMatches[1]);
+                    $colDef = trim($colMatches[2]);
                     
                     // Converter tipos de dados
                     $colDef = preg_replace('/\bINTEGER\b/i', 'INT', $colDef);
+                    
+                    // Se for VARCHAR sem tamanho, adicionar tamanho padrão
+                    if (preg_match('/\bvarchar\b/i', $colDef) && !preg_match('/varchar\s*\(/i', $colDef)) {
+                        $colDef = preg_replace('/\bvarchar\b/i', 'VARCHAR(255)', $colDef);
+                    }
+                    
                     $colDef = preg_replace('/\bTEXT\b/i', 'TEXT', $colDef);
                     $colDef = preg_replace('/\bBLOB\b/i', 'BLOB', $colDef);
                     $colDef = preg_replace('/\bREAL\b/i', 'DOUBLE', $colDef);
@@ -238,33 +248,59 @@ class ConvertSqliteToMysql extends Command
                     // Converter AUTOINCREMENT
                     $colDef = preg_replace('/\bAUTOINCREMENT\b/i', 'AUTO_INCREMENT', $colDef);
                     
-                    // Converter NOT NULL
-                    $colDef = preg_replace('/\bNOT NULL\b/i', 'NOT NULL', $colDef);
+                    // Normalizar NOT NULL
+                    $colDef = preg_replace('/\bnot null\b/i', 'NOT NULL', $colDef);
+                    $colDef = preg_replace('/\bnull\b/i', 'NULL', $colDef);
                     
-                    // Converter DEFAULT
-                    $colDef = preg_replace('/\bDEFAULT\s+(\d+|"[^"]*"|\'[^\']*\')/i', 'DEFAULT $1', $colDef);
+                    // Normalizar PRIMARY KEY
+                    if (preg_match('/\bprimary key\b/i', $colDef)) {
+                        $colDef = preg_replace('/\bprimary key\b/i', 'PRIMARY KEY', $colDef);
+                        $primaryKeys[] = $colName;
+                    }
+                    
+                    // Converter DEFAULT (remover aspas se necessário)
+                    $colDef = preg_replace_callback('/DEFAULT\s+(["\']?)([^"\']+)\1/i', function($m) {
+                        return 'DEFAULT ' . (is_numeric($m[2]) ? $m[2] : "'{$m[2]}'");
+                    }, $colDef);
                     
                     $convertedColumns[] = "`{$colName}` {$colDef}";
-                } else {
-                    // Pode ser uma constraint (PRIMARY KEY, FOREIGN KEY, etc)
-                    $column = preg_replace('/PRIMARY KEY\s*\(([^)]+)\)/i', 'PRIMARY KEY ($1)', $column);
-                    $column = preg_replace('/FOREIGN KEY\s*\(([^)]+)\)/i', 'FOREIGN KEY ($1)', $column);
+                } elseif (preg_match('/PRIMARY KEY\s*\(([^)]+)\)/i', $column, $pkMatches)) {
+                    // PRIMARY KEY como constraint separada
+                    $pkCols = preg_split('/\s*,\s*/', trim($pkMatches[1], ' "\''));
+                    foreach ($pkCols as $pkCol) {
+                        $pkCol = trim($pkCol, ' "\'');
+                        $primaryKeys[] = $pkCol;
+                    }
+                } elseif (preg_match('/FOREIGN KEY/i', $column)) {
+                    // FOREIGN KEY - converter para sintaxe MySQL
+                    $column = preg_replace('/["\'](\w+)["\']/', '`$1`', $column);
                     $convertedColumns[] = $column;
                 }
+            }
+            
+            // Se há PRIMARY KEY mas não está nas colunas, adicionar
+            if (!empty($primaryKeys) && !preg_match('/PRIMARY KEY/i', implode(' ', $convertedColumns))) {
+                $pkCols = array_map(fn($col) => "`{$col}`", $primaryKeys);
+                $convertedColumns[] = "PRIMARY KEY (" . implode(', ', $pkCols) . ")";
             }
             
             // Reconstruir CREATE TABLE
             $sql = "CREATE TABLE `{$tableName}` (\n  " . implode(",\n  ", $convertedColumns) . "\n)";
         } else {
             // Fallback: conversão simples
-            $sql = preg_replace('/CREATE TABLE\s+(\w+)/i', 'CREATE TABLE `$1`', $sql);
+            $sql = preg_replace('/CREATE TABLE\s+["\']?(\w+)["\']?/i', 'CREATE TABLE `$1`', $sql);
+            $sql = preg_replace('/["\'](\w+)["\']/i', '`$1`', $sql);
             $sql = preg_replace('/\bINTEGER\b/i', 'INT', $sql);
+            $sql = preg_replace('/\bvarchar\b/i', 'VARCHAR(255)', $sql);
             $sql = preg_replace('/\bTEXT\b/i', 'TEXT', $sql);
             $sql = preg_replace('/\bBLOB\b/i', 'BLOB', $sql);
             $sql = preg_replace('/\bREAL\b/i', 'DOUBLE', $sql);
             $sql = preg_replace('/\bNUMERIC\b/i', 'DECIMAL(10,2)', $sql);
             $sql = preg_replace('/\bAUTOINCREMENT\b/i', 'AUTO_INCREMENT', $sql);
         }
+        
+        // Remover aspas duplas restantes e substituir por backticks
+        $sql = preg_replace('/"(\w+)"/', '`$1`', $sql);
         
         // Adicionar ENGINE e CHARSET se não existir
         if (!preg_match('/ENGINE=/i', $sql)) {
