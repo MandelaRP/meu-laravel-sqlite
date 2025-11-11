@@ -307,6 +307,9 @@ class ConvertSqliteToMysql extends Command
         fwrite($file, "LOCK TABLES `{$tableName}` WRITE;\n");
         fwrite($file, "/*!40000 ALTER TABLE `{$tableName}` DISABLE KEYS */;\n");
 
+        // Obter referências válidas para validar FOREIGN KEYs
+        $validReferences = $this->getValidReferences($tableName, $allValidReferences);
+
         // Inserir dados
         $columns = array_keys((array) $rows->first());
         $insertSql = "INSERT INTO `{$tableName}` (`" . implode('`, `', $columns) . "`) VALUES\n";
@@ -314,9 +317,17 @@ class ConvertSqliteToMysql extends Command
         $values = [];
         $batchSize = 100; // Inserir em lotes de 100 registros
         $count = 0;
+        $skipped = 0;
         
         foreach ($rows as $row) {
             $rowArray = (array) $row;
+            
+            // Validar FOREIGN KEYs antes de inserir
+            if (!$this->validateForeignKeys($tableName, $rowArray, $validReferences)) {
+                $skipped++;
+                continue; // Pular registros com FOREIGN KEYs inválidas
+            }
+            
             $rowValues = [];
             
             foreach ($columns as $col) {
@@ -354,6 +365,11 @@ class ConvertSqliteToMysql extends Command
         if (!empty($values)) {
             fwrite($file, $insertSql . implode(",\n", $values) . ";\n");
         }
+        
+        if ($skipped > 0) {
+            fwrite($file, "-- ⚠️  {$skipped} registro(s) pulado(s) devido a FOREIGN KEYs inválidas\n");
+        }
+        
         fwrite($file, "/*!40000 ALTER TABLE `{$tableName}` ENABLE KEYS */;\n");
         fwrite($file, "UNLOCK TABLES;\n\n");
     }

@@ -1,5 +1,5 @@
 -- Exportação de SQLite para MySQL
--- Gerado em: 2025-11-11 16:50:03
+-- Gerado em: 2025-11-11 16:52:07
 -- 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -350,8 +350,8 @@ CREATE TABLE `addresses` (
 LOCK TABLES `addresses` WRITE;
 /*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
 INSERT INTO `addresses` (`id`, `user_id`, `zip_code`, `address`, `number`, `city`, `state`, `created_at`, `updated_at`) VALUES
-(1, 7, '57602-335', 'Travessa Vereador Zeca Paulo', '300', 'Maceió', 'AL', '2025-11-09 17:00:53', '2025-11-09 17:00:53'),
 (2, 8, '57602-335', 'Travessa Vereador Zeca Paulo', '300', 'Maceió', 'AL', '2025-11-09 17:40:37', '2025-11-09 17:40:37');
+-- ⚠️  1 registro(s) pulado(s) devido a FOREIGN KEYs inválidas
 /*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -373,13 +373,7 @@ CREATE TABLE `categories` (
 -- Dados da tabela `categories`
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` (`id`, `user_id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
-('019a6978-4261-7297-b408-37f99858b313', 1, 'Eletrônicos', 'Produtos eletrônicos e tecnológicos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-426c-7321-90df-9f945330722a', 1, 'Ebooks', 'Ebooks e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-4283-7288-bd5e-7b71f062085d', 1, 'Vestuário', 'Roupas e acessórios', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-428f-72a9-9bfb-261f62e8ea89', 1, 'Casa e Jardim', 'Produtos para casa e jardinagem', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-4299-7342-a3cc-44ee13a3bc27', 1, 'Esportes', 'Equipamentos e acessórios esportivos', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-42a3-727a-b25e-0fb4698c3f11', 1, 'Livros', 'Livros e materiais de leitura', 1, '2025-11-09 16:34:40', '2025-11-09 16:34:40');
+-- ⚠️  6 registro(s) pulado(s) devido a FOREIGN KEYs inválidas
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -473,10 +467,7 @@ CREATE TABLE `groups` (
 -- Dados da tabela `groups`
 LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
-INSERT INTO `groups` (`id`, `user_id`, `name`, `description`, `created_at`, `updated_at`) VALUES
-('019a6978-41cf-726f-a753-cedffa7fa8dc', 2, 'ipsam', 'Grupo de teste', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-41db-720c-9c54-2b38a1677974', 3, 'qui', 'Grupo de teste', '2025-11-09 16:34:40', '2025-11-09 16:34:40'),
-('019a6978-41eb-72b1-b648-96e839b1e79a', 4, 'cumque', 'Grupo de teste', '2025-11-09 16:34:40', '2025-11-09 16:34:40');
+-- ⚠️  3 registro(s) pulado(s) devido a FOREIGN KEYs inválidas
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -679,8 +670,8 @@ CREATE TABLE `checkouts` (
 LOCK TABLES `checkouts` WRITE;
 /*!40000 ALTER TABLE `checkouts` DISABLE KEYS */;
 INSERT INTO `checkouts` (`id`, `user_id`, `product_id`, `discount_percentage`, `layout`, `banner`, `countdown_enabled`, `countdown_icon`, `countdown_duration`, `countdown_bg_color`, `countdown_text_color`, `countdown_message`, `countdown_expired`, `button_primary_color`, `button_secondary_color`, `button_hover_primary_color`, `button_hover_secondary_color`, `form_fields_config`, `form_requirements`, `background_color`, `text_color`, `stepped_form_enabled`, `steps`, `payment_methods`, `order_bump_bg_color`, `order_bump_text_color`, `order_bump_border_color`, `order_bump_description`, `order_bump_cta_text`, `order_bump_cta_bg_color`, `order_bump_cta_text_color`, `order_bump_recommended_text`, `order_bump_recommended_color`, `order_bump_enabled`, `created_at`, `updated_at`) VALUES
-('019a700e-1612-7178-91cb-ced18ae807fb', 6, '019a6fd1-51a4-73d1-8c89-a80dfe89794b', 0, 'single', NULL, 0, '🔥', 3600, '#dc2626', '#ffffff', 'Oferta por tempo limitado!', 0, '#2563eb', '#6b7280', '#1d4ed8', '#4b5563', '{\"name\":{\"required\":true,\"visible\":true,\"order\":1,\"label\":\"Nome completo\"},\"email\":{\"required\":true,\"visible\":true,\"order\":2,\"label\":\"E-mail\"},\"phone\":{\"required\":false,\"visible\":false,\"order\":3,\"label\":\"Telefone\"},\"cpf\":{\"required\":false,\"visible\":false,\"order\":4,\"label\":\"CPF\"},\"zip_code\":{\"required\":false,\"visible\":false,\"order\":5,\"label\":\"CEP\"},\"address\":{\"required\":false,\"visible\":false,\"order\":6,\"label\":\"Endere\\u00e7o\"},\"city\":{\"required\":false,\"visible\":false,\"order\":7,\"label\":\"Cidade\"},\"state\":{\"required\":false,\"visible\":false,\"order\":8,\"label\":\"Estado\"},\"number\":{\"required\":false,\"visible\":false,\"order\":9,\"label\":\"N\\u00famero\"},\"complement\":{\"required\":false,\"visible\":false,\"order\":10,\"label\":\"Complemento\"}}', '[\"name\",\"email\"]', '#ffffff', '#000000', 1, '[{\"step\":1,\"title\":\"Passo 1\",\"description\":\"Descri\\u00e7\\u00e3o do passo 1\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"},{\"step\":2,\"title\":\"Passo 2\",\"description\":\"Descri\\u00e7\\u00e3o do passo 2\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"},{\"step\":3,\"title\":\"Passo 3\",\"description\":\"Descri\\u00e7\\u00e3o do passo 3\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"}]', '[{\"name\":\"pix\",\"label\":\"PIX\",\"icon\":\"pix\",\"image\":\"\\/images\\/icons\\/icon-pix.png\",\"show_image\":true,\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#dbdbdb\",\"enabled\":true},{\"name\":\"credit_card\",\"label\":\"Cart\\u00e3o de Cr\\u00e9dito\",\"icon\":\"credit_card\",\"image\":\"\\/images\\/icons\\/icon-credit-card.png\",\"show_image\":false,\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#2980b9\",\"enabled\":false},{\"name\":\"boleto\",\"label\":\"Boleto\",\"icon\":\"boleto\",\"image\":\"\\/images\\/icons\\/icon-boleto.png\",\"show_image\":false,\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#e67e22\",\"enabled\":false}]', '#ffffff', '#0f172a', '#fbbf24', NULL, 'Quero comprar também!', '#10b981', '#ffffff', '(Recomendado)', '#fbbf24', 1, '2025-11-10 23:16:02', '2025-11-10 23:16:02'),
 ('019a7046-265a-7389-9c3f-f515c9bc9a95', 6, '019a701b-95aa-719a-bcf9-4b918108ffa7', 0, 'single', NULL, 0, '🔥', 3600, '#dc2626', '#ffffff', 'Oferta por tempo limitado!', 0, '#2563eb', '#6b7280', '#1d4ed8', '#4b5563', '{\"name\":{\"required\":true,\"visible\":true,\"order\":\"1\",\"label\":\"Nome completo\"},\"email\":{\"required\":true,\"visible\":true,\"order\":\"2\",\"label\":\"E-mail\"},\"phone\":{\"required\":false,\"visible\":false,\"order\":\"3\",\"label\":\"Telefone\"},\"cpf\":{\"required\":false,\"visible\":false,\"order\":\"4\",\"label\":\"CPF\"},\"zip_code\":{\"required\":false,\"visible\":false,\"order\":\"5\",\"label\":\"CEP\"},\"address\":{\"required\":false,\"visible\":false,\"order\":\"6\",\"label\":\"Endere\\u00e7o\"},\"city\":{\"required\":false,\"visible\":false,\"order\":\"7\",\"label\":\"Cidade\"},\"state\":{\"required\":false,\"visible\":false,\"order\":\"8\",\"label\":\"Estado\"},\"number\":{\"required\":false,\"visible\":false,\"order\":\"9\",\"label\":\"N\\u00famero\"},\"complement\":{\"required\":false,\"visible\":false,\"order\":\"10\",\"label\":\"Complemento\"}}', '[\"name\",\"email\"]', '#ffffff', '#000000', 1, '[{\"step\":\"1\",\"title\":\"Passo 1\",\"description\":\"Descri\\u00e7\\u00e3o do passo 1\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"},{\"step\":\"2\",\"title\":\"Passo 2\",\"description\":\"Descri\\u00e7\\u00e3o do passo 2\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"},{\"step\":\"3\",\"title\":\"Passo 3\",\"description\":\"Descri\\u00e7\\u00e3o do passo 3\",\"bg_color\":\"#f3f4f6\",\"text_color\":\"#374151\",\"border_color\":\"#d1d5db\",\"icon_check_bg\":\"#2ecc71\",\"icon_check_color\":\"#ffffff\"}]', '[{\"name\":\"pix\",\"label\":\"PIX\",\"icon\":\"pix\",\"image\":\"\\/images\\/icons\\/icon-pix.png\",\"show_image\":\"1\",\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#dbdbdb\",\"enabled\":\"1\"},{\"name\":\"credit_card\",\"label\":\"Cart\\u00e3o de Cr\\u00e9dito\",\"icon\":\"credit_card\",\"image\":\"\\/images\\/icons\\/icon-credit-card.png\",\"show_image\":\"0\",\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#2980b9\",\"enabled\":\"0\"},{\"name\":\"boleto\",\"label\":\"Boleto\",\"icon\":\"boleto\",\"image\":\"\\/images\\/icons\\/icon-boleto.png\",\"show_image\":\"0\",\"icon_color\":\"#ffffff\",\"icon_bg_color\":\"#e67e22\",\"enabled\":\"0\"}]', '#ffffff', '#0f172a', '#fbbf24', NULL, 'Quero comprar também!', '#10b981', '#ffffff', '(Recomendado)', '#fbbf24', 1, '2025-11-11 00:17:16', '2025-11-11 04:47:21');
+-- ⚠️  1 registro(s) pulado(s) devido a FOREIGN KEYs inválidas
 /*!40000 ALTER TABLE `checkouts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -725,12 +716,12 @@ CREATE TABLE `permission_user` (
 LOCK TABLES `permission_user` WRITE;
 /*!40000 ALTER TABLE `permission_user` DISABLE KEYS */;
 INSERT INTO `permission_user` (`user_id`, `permission_id`) VALUES
-(1, 1),
 (6, 1),
 (6, 2),
 (6, 3),
 (6, 4),
 (6, 5);
+-- ⚠️  1 registro(s) pulado(s) devido a FOREIGN KEYs inválidas
 /*!40000 ALTER TABLE `permission_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -780,8 +771,8 @@ CREATE TABLE `role_user` (
 LOCK TABLES `role_user` WRITE;
 /*!40000 ALTER TABLE `role_user` DISABLE KEYS */;
 INSERT INTO `role_user` (`role_id`, `user_id`) VALUES
-(1, 1),
 (1, 6);
+-- ⚠️  1 registro(s) pulado(s) devido a FOREIGN KEYs inválidas
 /*!40000 ALTER TABLE `role_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
