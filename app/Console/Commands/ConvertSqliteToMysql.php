@@ -441,6 +441,11 @@ class ConvertSqliteToMysql extends Command
             if (!empty($checkConstraints)) {
                 foreach ($checkConstraints as $check) {
                     // Corrigir sintaxe CHECK - adicionar aspas nos valores se necessário
+                    // Primeiro, garantir que tem parêntese de fechamento
+                    if (!preg_match('/\)\s*$/', $check)) {
+                        $check = rtrim($check) . ')';
+                    }
+                    // Corrigir sintaxe CHECK - adicionar aspas nos valores se necessário
                     $check = preg_replace_callback('/CHECK\s*\((\w+)\s+IN\s*\(([^)]+)\)\)/i', function($m) {
                         $columnName = $m[1];
                         $values = $m[2];
@@ -456,6 +461,23 @@ class ConvertSqliteToMysql extends Command
                         }, $valueList);
                         return "CHECK (`{$columnName}` IN (" . implode(', ', $quotedValues) . "))";
                     }, $check);
+                    // Se ainda não foi processado, tentar processar manualmente
+                    if (!preg_match('/CHECK\s*\(`\w+`\s+IN\s*\(/', $check)) {
+                        // Tentar extrair manualmente
+                        if (preg_match('/CHECK\s*\((\w+)\s+in\s*\(([^)]+)\)/i', $check, $m)) {
+                            $columnName = $m[1];
+                            $values = $m[2];
+                            $valueList = preg_split('/\s*,\s*/', $values);
+                            $quotedValues = array_map(function($val) {
+                                $val = trim($val);
+                                if (preg_match('/^[\'"]/', $val)) {
+                                    return $val;
+                                }
+                                return "'{$val}'";
+                            }, $valueList);
+                            $check = "CHECK (`{$columnName}` IN (" . implode(', ', $quotedValues) . "))";
+                        }
+                    }
                     // Normalizar CHECK para maiúsculas
                     $check = preg_replace('/\bcheck\b/i', 'CHECK', $check);
                     // Adicionar antes do PRIMARY KEY se houver

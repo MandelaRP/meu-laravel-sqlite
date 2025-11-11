@@ -1,5 +1,5 @@
 -- Exportação de SQLite para MySQL
--- Gerado em: 2025-11-11 16:31:29
+-- Gerado em: 2025-11-11 16:32:15
 -- 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -180,7 +180,7 @@ CREATE TABLE `acquirers` (
   `fixed_fee` DECIMAL(10,2) NOT NULL DEFAULT '0',
   `percentage_fee` DECIMAL(10,2) NOT NULL DEFAULT '0',
   `withdrawal_fee` DECIMAL(10,2) NOT NULL DEFAULT '0',
-  CHECK (api_status in (online, offline, error, checking),
+  CHECK (`api_status` IN ('online', 'offline', 'error', 'checking')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -423,7 +423,7 @@ CREATE TABLE `fullpix_sales` (
   `created_at` datetime,
   `updated_at` datetime,
   FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
-  CHECK (status in (pending, waiting_payment, paid, refused, cancelled, refunded, expired),
+  CHECK (`status` IN ('pending', 'waiting_payment', 'paid', 'refused', 'cancelled', 'refunded', 'expired')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -498,7 +498,7 @@ CREATE TABLE `liberpay_sales` (
   `created_at` datetime,
   `updated_at` datetime,
   FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
-  CHECK (status in (pending, paid, expired, cancelled, refunded),
+  CHECK (`status` IN ('pending', 'paid', 'expired', 'cancelled', 'refunded')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -520,7 +520,7 @@ CREATE TABLE `members` (
   `created_at` datetime,
   `updated_at` datetime,
   FOREIGN KEY(`user_id`) references `users`(`id`),
-  CHECK (alert_type in (error, warning, info, debug, critical, success, unknown, fatal, notice, alert, emergency),
+  CHECK (`alert_type` IN ('error', 'warning', 'info', 'debug', 'critical', 'success', 'unknown', 'fatal', 'notice', 'alert', 'emergency')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -555,7 +555,7 @@ CREATE TABLE `pix_keys` (
   `created_at` datetime,
   `updated_at` datetime,
   FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
-  CHECK (type in (CPF, CNPJ, EMAIL, PHONE, EVP),
+  CHECK (`type` IN ('CPF', 'CNPJ', 'EMAIL', 'PHONE', 'EVP')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -587,7 +587,7 @@ CREATE TABLE `products` (
   `updated_at` datetime,
   FOREIGN KEY(`user_id`) references `users`(`id`),
   FOREIGN KEY(`category_id`) references `categories`(`id`),
-  CHECK (type in (FISICAL, DIGITAL),
+  CHECK (`type` IN ('FISICAL', 'DIGITAL')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -641,8 +641,8 @@ CREATE TABLE `withdrawals` (
   `updated_at` datetime,
   `gateway_fee` DECIMAL(10,2) NOT NULL DEFAULT '0',
   FOREIGN KEY(`user_id`) references `users`(`id`) on delete cascade,
-  CHECK (pix_type in (CPF, CNPJ, EMAIL, PHONE, EVP),
-  CHECK (status in (pending, approved, processing, done, done_manual, failed, refused, cancelled),
+  CHECK (`pix_type` IN ('CPF', 'CNPJ', 'EMAIL', 'PHONE', 'EVP')),
+  CHECK (`status` IN ('pending', 'approved', 'processing', 'done', 'done_manual', 'failed', 'refused', 'cancelled')),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
