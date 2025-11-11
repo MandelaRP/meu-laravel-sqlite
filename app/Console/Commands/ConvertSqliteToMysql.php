@@ -255,6 +255,23 @@ class ConvertSqliteToMysql extends Command
                         $colDef = preg_replace('/\bvarchar\b/i', 'VARCHAR(255)', $colDef);
                     }
                     
+                    // Corrigir CHECK constraints - adicionar aspas nos valores
+                    $colDef = preg_replace_callback('/check\s*\((\w+)\s+in\s*\(([^)]+)\)\)/i', function($m) {
+                        $columnName = $m[1];
+                        $values = $m[2];
+                        // Dividir valores e adicionar aspas
+                        $valueList = preg_split('/\s*,\s*/', $values);
+                        $quotedValues = array_map(function($val) {
+                            $val = trim($val);
+                            // Se já tem aspas, manter; senão, adicionar
+                            if (preg_match('/^[\'"]/', $val)) {
+                                return $val;
+                            }
+                            return "'{$val}'";
+                        }, $valueList);
+                        return "CHECK (`{$columnName}` IN (" . implode(', ', $quotedValues) . "))";
+                    }, $colDef);
+                    
                     $colDef = preg_replace('/\bTEXT\b/i', 'TEXT', $colDef);
                     $colDef = preg_replace('/\bBLOB\b/i', 'BLOB', $colDef);
                     $colDef = preg_replace('/\bREAL\b/i', 'DOUBLE', $colDef);
@@ -273,10 +290,44 @@ class ConvertSqliteToMysql extends Command
                         $primaryKeys[] = $colName;
                     }
                     
-                    // Converter DEFAULT (remover aspas se necessário)
-                    $colDef = preg_replace_callback('/DEFAULT\s+(["\']?)([^"\']+)\1/i', function($m) {
-                        return 'DEFAULT ' . (is_numeric($m[2]) ? $m[2] : "'{$m[2]}'");
+                    // Converter DEFAULT - tratar todos os casos
+                    // Processar DEFAULT usando regex mais simples e direto
+                    // Primeiro, tratar valores com parênteses e aspas aninhadas
+                    $colDef = preg_replace_callback('/DEFAULT\s+\(([^)]+)\)/i', function($m) {
+                        $value = trim($m[1]);
+                        // Remover aspas externas se houver
+                        $value = preg_replace('/^[\'"]+|[\'"]+$/', '', $value);
+                        // Remover aspas duplas no final se houver
+                        $value = rtrim($value, "'\"");
+                        if (is_numeric($value)) {
+                            return 'DEFAULT ' . $value;
+                        }
+                        return "DEFAULT '{$value}'";
                     }, $colDef);
+                    
+                    // CURRENT_TIMESTAMP - remover aspas
+                    $colDef = preg_replace("/DEFAULT\s+['\"]?CURRENT_TIMESTAMP['\"]?/i", 'DEFAULT CURRENT_TIMESTAMP', $colDef);
+                    
+                    // Valores numéricos diretos sem parênteses
+                    $colDef = preg_replace_callback('/DEFAULT\s+(\d+(?:\.\d+)?)/i', function($m) {
+                        return 'DEFAULT ' . $m[1];
+                    }, $colDef);
+                    
+                    // Normalizar DEFAULT em minúsculas para maiúsculas e adicionar aspas se necessário
+                    $colDef = preg_replace_callback('/\bdefault\s+(\w+)/i', function($m) {
+                        $value = $m[1];
+                        // Se não é CURRENT_TIMESTAMP, adicionar aspas
+                        if (strtoupper($value) !== 'CURRENT_TIMESTAMP') {
+                            return "DEFAULT '{$value}'";
+                        }
+                        return 'DEFAULT CURRENT_TIMESTAMP';
+                    }, $colDef);
+                    
+                    // Converter datetime para TIMESTAMP se tiver DEFAULT CURRENT_TIMESTAMP
+                    // Fazer isso DEPOIS de processar DEFAULT
+                    if (preg_match('/\bdatetime\b/i', $colDef) && preg_match('/DEFAULT\s+CURRENT_TIMESTAMP/i', $colDef)) {
+                        $colDef = preg_replace('/\bdatetime\b/i', 'TIMESTAMP', $colDef);
+                    }
                     
                     $convertedColumns[] = "`{$colName}` {$colDef}";
                 } elseif (preg_match('/PRIMARY KEY\s*\(([^)]+)\)/i', $column, $pkMatches)) {
@@ -292,6 +343,8 @@ class ConvertSqliteToMysql extends Command
                 } elseif (preg_match('/FOREIGN KEY/i', $column)) {
                     // FOREIGN KEY - converter para sintaxe MySQL
                     $column = preg_replace('/["\'](\w+)["\']/', '`$1`', $column);
+                    // Normalizar FOREIGN KEY para maiúsculas
+                    $column = preg_replace('/\bforeign\s+key\b/i', 'FOREIGN KEY', $column);
                     $convertedColumns[] = $column;
                 }
             }
